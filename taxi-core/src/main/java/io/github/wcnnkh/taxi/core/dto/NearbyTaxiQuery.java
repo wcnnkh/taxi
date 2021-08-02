@@ -1,11 +1,19 @@
 package io.github.wcnnkh.taxi.core.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.io.Serializable;
 
-public class Taxi extends Trace {
+public class NearbyTaxiQuery implements Serializable {
 	private static final long serialVersionUID = 1L;
-	@Schema(description = "车辆状态")
+	private Location location;
 	private TaxiStatus taxiStatus;
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
 
 	public TaxiStatus getTaxiStatus() {
 		return taxiStatus;

@@ -11,5 +11,16 @@
   <packaging>pom</packaging>
   <modules>
   	<module>taxi-core</module>
+  	<module>taxi-web</module>
   </modules>
+  
+  <dependencyManagement>
+  	<dependencies>
+  		<dependency>
+  			<groupId>io.github.wcnkh</groupId>
+  			<artifactId>taxi-core</artifactId>
+  			<version>0.0.1-SNAPSHOT</version>
+  		</dependency>
+  	</dependencies>
+  </dependencyManagement>
 </project>
