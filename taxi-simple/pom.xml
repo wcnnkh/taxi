@@ -7,15 +7,15 @@
 		<artifactId>taxi</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>taxi-web</artifactId>
+	<artifactId>taxi-simple</artifactId>
 	<dependencies>
-		<dependency>
-			<groupId>scw</groupId>
-			<artifactId>scw-web</artifactId>
-		</dependency>
 		<dependency>
 			<groupId>io.github.wcnkh</groupId>
 			<artifactId>taxi-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>scw</groupId>
+			<artifactId>scw-lucene</artifactId>
 		</dependency>
 	</dependencies>
 </project>

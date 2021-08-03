@@ -12,6 +12,7 @@
   <modules>
   	<module>taxi-core</module>
   	<module>taxi-web</module>
+  	<module>taxi-simple</module>
   </modules>
   
   <dependencyManagement>
