@@ -6,7 +6,6 @@ import io.github.wcnnkh.taxi.core.event.GrabOrderEvent;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEvent;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
 import io.github.wcnnkh.taxi.core.service.OrderService;
-import scw.context.result.Result;
 import scw.event.EventListener;
 import scw.mapper.Copy;
 
@@ -38,16 +37,14 @@ public class GrabOrderEventListener implements EventListener<GrabOrderEvent> {
 				break;
 			}
 
-			Result result = orderService.bindOrder(event.getGrabOrderRequest().getTaxiId(),
-					event.getGrabOrderRequest().getOrderId());
-			if (result.isError()) {
+			if(!orderService.bind(event.getGrabOrderRequest())){
 				// 绑定失败，尝试重新绑定
 				continue;
 			}
 
 			Order newOrder = new Order();
 			Copy.copy(newOrder, order);
-			newOrder.setStatus(OrderStatus.CONFIRM_DRIVER.getCode());
+			newOrder.setStatus(OrderStatus.PRE_CONFIRM.getCode());
 			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order, newOrder));
 			break;
 		}

@@ -6,4 +6,10 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>taxi-core</artifactId>
+  <dependencies>
+  	<dependency>
+  		<groupId>scw</groupId>
+  		<artifactId>scw-orm</artifactId>
+  	</dependency>
+  </dependencies>
 </project>

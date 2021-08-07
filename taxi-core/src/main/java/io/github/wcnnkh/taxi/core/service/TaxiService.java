@@ -4,6 +4,7 @@ import java.util.List;
 
 import io.github.wcnnkh.taxi.core.dto.NearbyTaxiQuery;
 import io.github.wcnnkh.taxi.core.dto.Taxi;
+import io.github.wcnnkh.taxi.core.dto.TaxiStatus;
 import io.github.wcnnkh.taxi.core.dto.Trace;
 
 /**
@@ -26,7 +27,7 @@ public interface TaxiService {
 	 * @return
 	 */
 	List<Taxi> getNearbyTaxis(NearbyTaxiQuery query);
-
+ 
 	/**
 	 * 获取taxi信息
 	 * 
@@ -34,4 +35,6 @@ public interface TaxiService {
 	 * @return
 	 */
 	Taxi getTaxi(String taxiId);
+	
+	void setStatus(String taxiId, TaxiStatus taxiStatus);
 }

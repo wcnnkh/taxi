@@ -14,10 +14,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "位置")
 public class Location implements Serializable {
 	private static final long serialVersionUID = 1L;
-	@Schema(description = "经度")
+	@Schema(description = "经度", required = true)
 	@NotNull
 	private Double longitude;
-	@Schema(description = "纬度")
+	@Schema(description = "纬度", required = true)
 	@NotNull
 	private Double latitude;
 

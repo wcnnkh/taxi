@@ -57,5 +57,4 @@ public class DispatchServiceImpl implements DispatchService {
 	public void grabOrder(GrabOrderRequest request) {
 		grabOrderEventDispatcher.publishEvent(new GrabOrderEvent(request));
 	}
-
 }
