@@ -24,8 +24,14 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public boolean bind(GrabOrderRequest request) {
+	public boolean preConfirm(GrabOrderRequest request) {
 		Sql sql = new SimpleSql("update set `order` status=?, taxiId = ? where orderId = ?", OrderStatus.CONFIRM.getCode(), request.getTaxiId(), request.getOrderId());
+		return db.update(sql) > 0;
+	}
+
+	@Override
+	public boolean confirm(GrabOrderRequest request) {
+		Sql sql = new SimpleSql("update set `order` status=? where orderId = ? and taxiId=?", OrderStatus.CONFIRM.getCode(), request.getOrderId(), request.getTaxiId());
 		return db.update(sql) > 0;
 	}
 

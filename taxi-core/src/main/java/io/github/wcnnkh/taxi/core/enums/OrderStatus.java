@@ -3,7 +3,8 @@ package io.github.wcnnkh.taxi.core.enums;
 public enum OrderStatus {
 	RECORD("000", "录单"), 
 	PRE_CONFIRM("100", "预确认接口"),
-	CONFIRM("110", "确认接单"),
+	CONFIRM_TIMEOUT("110", "确认超时"),
+	CONFIRM("200", "确认接单"),
 	
 	CANCEL("500", "取消"),
 	NO_SUPPLY("510", "无供");

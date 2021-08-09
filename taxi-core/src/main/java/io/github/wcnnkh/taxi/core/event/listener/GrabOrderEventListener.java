@@ -37,7 +37,7 @@ public class GrabOrderEventListener implements EventListener<GrabOrderEvent> {
 				break;
 			}
 
-			if(!orderService.bind(event.getGrabOrderRequest())){
+			if(!orderService.preConfirm(event.getGrabOrderRequest())){
 				// 绑定失败，尝试重新绑定
 				continue;
 			}
