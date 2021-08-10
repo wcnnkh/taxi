@@ -13,6 +13,7 @@
   	<module>taxi-core</module>
   	<module>taxi-web</module>
   	<module>taxi-simple</module>
+  	<module>taxi-example</module>
   </modules>
   
   <dependencyManagement>
@@ -20,6 +21,17 @@
   		<dependency>
   			<groupId>io.github.wcnkh</groupId>
   			<artifactId>taxi-core</artifactId>
+  			<version>0.0.1-SNAPSHOT</version>
+  		</dependency>
+  		<dependency>
+  			<groupId>io.github.wcnkh</groupId>
+  			<artifactId>taxi-simple</artifactId>
+  			<version>0.0.1-SNAPSHOT</version>
+  		</dependency>
+  		
+  		<dependency>
+  			<groupId>io.github.wcnkh</groupId>
+  			<artifactId>taxi-web</artifactId>
   			<version>0.0.1-SNAPSHOT</version>
   		</dependency>
   	</dependencies>

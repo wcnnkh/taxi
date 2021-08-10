@@ -1,12 +1,5 @@
 package io.github.wcnnkh.taxi.simple;
 
-import io.github.wcnnkh.taxi.core.dto.NearbyTaxiQuery;
-import io.github.wcnnkh.taxi.core.dto.Taxi;
-import io.github.wcnnkh.taxi.core.dto.TaxiStatus;
-import io.github.wcnnkh.taxi.core.dto.Trace;
-import io.github.wcnnkh.taxi.core.dto.TraceLocation;
-import io.github.wcnnkh.taxi.core.service.TaxiService;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,19 +23,28 @@ import org.locationtech.spatial4j.distance.DistanceUtils;
 import org.locationtech.spatial4j.shape.Point;
 import org.locationtech.spatial4j.shape.Shape;
 
+import io.github.wcnnkh.taxi.core.dto.NearbyTaxiQuery;
+import io.github.wcnnkh.taxi.core.dto.Taxi;
+import io.github.wcnnkh.taxi.core.dto.TaxiStatus;
+import io.github.wcnnkh.taxi.core.dto.Trace;
+import io.github.wcnnkh.taxi.core.dto.TraceLocation;
+import io.github.wcnnkh.taxi.core.service.TaxiService;
+import scw.context.annotation.Provider;
+import scw.core.Ordered;
+import scw.lucene.DefaultLuceneTemplete;
 import scw.lucene.LuceneTemplate;
 import scw.lucene.ScoreDocMapper;
 import scw.lucene.SearchParameters;
 import scw.lucene.SearchResults;
 import scw.validation.FastValidator;
 
+@Provider(order = Ordered.LOWEST_PRECEDENCE)
 public class LuceneTaxiService implements TaxiService {
-	private final LuceneTemplate luceneTemplate;
+	private final LuceneTemplate luceneTemplate = new DefaultLuceneTemplete("taxi_lucene");
 	private SpatialContext spatialContext = SpatialContext.GEO;
 	private SpatialStrategy strategy;
 
-	public LuceneTaxiService(LuceneTemplate luceneTemplate) {
-		this.luceneTemplate = luceneTemplate;
+	public LuceneTaxiService() {
 		// SpatialPrefixTree也可以通过SpatialPrefixTreeFactory工厂类构建
 		SpatialPrefixTree grid = new GeohashPrefixTree(spatialContext, 11);
 		this.strategy = new RecursivePrefixTreeStrategy(grid, "geoField");

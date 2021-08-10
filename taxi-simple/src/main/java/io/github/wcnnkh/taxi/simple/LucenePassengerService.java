@@ -1,10 +1,5 @@
 package io.github.wcnnkh.taxi.simple;
 
-import io.github.wcnnkh.taxi.core.dto.Passenger;
-import io.github.wcnnkh.taxi.core.dto.Trace;
-import io.github.wcnnkh.taxi.core.dto.TraceLocation;
-import io.github.wcnnkh.taxi.core.service.PassengerService;
-
 import java.io.IOException;
 
 import org.apache.lucene.document.Document;
@@ -20,18 +15,25 @@ import org.apache.lucene.spatial.prefix.tree.SpatialPrefixTree;
 import org.locationtech.spatial4j.context.SpatialContext;
 import org.locationtech.spatial4j.shape.Point;
 
+import io.github.wcnnkh.taxi.core.dto.Passenger;
+import io.github.wcnnkh.taxi.core.dto.Trace;
+import io.github.wcnnkh.taxi.core.dto.TraceLocation;
+import io.github.wcnnkh.taxi.core.service.PassengerService;
+import scw.context.annotation.Provider;
+import scw.core.Ordered;
+import scw.lucene.DefaultLuceneTemplete;
 import scw.lucene.LuceneTemplate;
 import scw.lucene.ScoreDocMapper;
 import scw.lucene.SearchParameters;
 import scw.validation.FastValidator;
 
+@Provider(order = Ordered.LOWEST_PRECEDENCE)
 public class LucenePassengerService implements PassengerService{
-	private final LuceneTemplate luceneTemplate;
+	private final LuceneTemplate luceneTemplate = new DefaultLuceneTemplete("passenger_lucene");
 	private SpatialContext spatialContext = SpatialContext.GEO;
 	private SpatialStrategy strategy;
 	
-	public LucenePassengerService(LuceneTemplate luceneTemplate){
-		this.luceneTemplate = luceneTemplate;
+	public LucenePassengerService(){
 		// SpatialPrefixTree也可以通过SpatialPrefixTreeFactory工厂类构建
 		SpatialPrefixTree grid = new GeohashPrefixTree(spatialContext, 11);
 		this.strategy = new RecursivePrefixTreeStrategy(grid, "geoField");

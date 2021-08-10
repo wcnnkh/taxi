@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no"> 
+	</head>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery.cookie.min.js"></script>
+	<script src="js/base.js"></script>
+	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=16bafbda6849ddf82e583a6a9278d831"></script> 
+	<body>
+	</body>
+	<script>
+		function createWebsocket(passengerId) {
+			if ("WebSocket" in window) {
+				var url = "ws://" + window.location.host + ":" + window.location.port + "/taxi/websocket/" + passengerId;
+				var websocket = new WebSocket(url); //创建WebSocket连接
+				afterConnection(websocket);
+			} else {
+				alert("您的浏览器不支持WebSocket");
+			}
+		}
+		
+		$(function() {
+			var taxi = localStorage.getItem("taxiId");
+			if (taxi) {
+				createWebsocket(taxi);
+			}else{
+				$.ajax({
+					url: "../common/uuid",
+					success: function(data) {
+						console.log(data);
+						taxi = data;
+						createWebsocket(taxi);
+					}
+				})
+			}
+		})
+		
+		function afterConnection(websocket) {
+		
+		}
+	</script>
+</html>

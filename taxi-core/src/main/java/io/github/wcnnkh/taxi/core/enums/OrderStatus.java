@@ -24,4 +24,13 @@ public enum OrderStatus {
 	public String getDescription() {
 		return description;
 	}
+	
+	/**
+	 * 此状态是否可以进行抢单调度
+	 * @param status
+	 * @return
+	 */
+	public static boolean canGrabOrder(String status) {
+		return RECORD.getCode().equals(status) || CONFIRM_TIMEOUT.getCode().equals(status);
+	}
 }
