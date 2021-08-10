@@ -15,7 +15,7 @@ public class TaxiExampleApplication {
 	@Bean
 	public StaticResourceRegistry getStaticResourceRegistry() {
 		StaticResourceRegistry registry = new StaticResourceRegistry();
-		registry.add("/client/**", "classpath*:/client/");
+		registry.add("/client/**", "classpath:");
 		return registry;
 	}
 	

@@ -40,7 +40,7 @@ import scw.validation.FastValidator;
 
 @Provider(order = Ordered.LOWEST_PRECEDENCE)
 public class LuceneTaxiService implements TaxiService {
-	private final LuceneTemplate luceneTemplate = new DefaultLuceneTemplete("taxi_lucene");
+	private final LuceneTemplate luceneTemplate = new DefaultLuceneTemplete("taxi");
 	private SpatialContext spatialContext = SpatialContext.GEO;
 	private SpatialStrategy strategy;
 
@@ -53,9 +53,8 @@ public class LuceneTaxiService implements TaxiService {
 	private void writeDocument(Document document, Trace trace) {
 		luceneTemplate.wrap(document, trace);
 		luceneTemplate.wrap(document, trace.getLocation());
-		Point point = spatialContext.getShapeFactory().pointXY(
-				trace.getLocation().getLatitude(),
-				trace.getLocation().getLongitude());
+		Point point = spatialContext.getShapeFactory().pointXY(trace.getLocation().getLongitude(),
+				trace.getLocation().getLatitude());
 		Field[] fields = strategy.createIndexableFields(point);
 		for (Field field : fields) {
 			document.add(field);

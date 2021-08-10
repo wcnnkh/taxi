@@ -4,20 +4,23 @@
 		<meta charset="utf-8">
 		<title></title>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+		<link href="css/base.css" type="text/css" rel="stylesheet"/>
+		<link href="css/passenger.css" type="text/css" rel="stylesheet"/>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/jquery.cookie.min.js"></script>
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=16bafbda6849ddf82e583a6a9278d831">
+		<script src="js/base.js"></script>
+		<script src="js/passenger.js"></script>	
 	</head>
-	<script src="js/jquery.min.js"></script>
-	<script src="js/jquery.cookie.min.js"></script>
-	<script src="js/base.js"></script>
-	<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=16bafbda6849ddf82e583a6a9278d831">
-	</script>
 	<body>
+		<div id="container"></div> 
 	</body>
 	<script>
 		function createWebsocket(passengerId) {
 			if ("WebSocket" in window) {
-				var url = "ws://" + window.location.host + ":" + window.location.port + "/passenger/websocket/" + passengerId;
+				var url = "ws://" + window.location.host + "/passenger/websocket/" + passengerId;
 				var websocket = new WebSocket(url); //创建WebSocket连接
-				afterConnection(websocket);
+				afterConnection(passengerId, websocket);
 			} else {
 				alert("您的浏览器不支持WebSocket");
 			}
@@ -33,14 +36,15 @@
 					success: function(data) {
 						console.log(data);
 						passengerId = data;
+						localStorage.setItem("passengerId", passengerId);
 						createWebsocket(passengerId);
 					}
 				})
 			}
 		})
 
-		function afterConnection(websocket) {
-
+		function afterConnection(passengerId, websocket) {
+			initMap(passengerId, websocket);
 		}
 	</script>
 </html>

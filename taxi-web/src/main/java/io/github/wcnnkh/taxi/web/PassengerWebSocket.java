@@ -57,7 +57,7 @@ public class PassengerWebSocket implements EventListener<OrderStatusEvent> {
 		Session oldSession = sessionMap.remove(passengerId);
 		sessionMap.put(passengerId, session);
 		if (oldSession != null) {
-			logger.info("关闭重复的连接");
+			logger.info("关闭重复的连接:{}", oldSession.getId());
 			oldSession.close(new CloseReason(CloseCodes.NORMAL_CLOSURE, "关闭重复的连接"));
 		}
 		session.getUserProperties().put("passengerId", passengerId);
@@ -66,6 +66,7 @@ public class PassengerWebSocket implements EventListener<OrderStatusEvent> {
 	@OnClose
 	public void onClose(Session session) throws IOException {
 		String passengerId = (String) session.getUserProperties().get("passengerId");
+		logger.info("{}关闭连接{}", session.getId(), passengerId);
 		Session oldSession = sessionMap.remove(passengerId);
 		if (oldSession != null) {
 			oldSession.close();
@@ -74,10 +75,12 @@ public class PassengerWebSocket implements EventListener<OrderStatusEvent> {
 
 	@OnError
 	public void onError(Session session, Throwable thr) {
+		logger.error(thr, "连接错误{}", session.getId());
 	}
 
 	@OnMessage
 	public void onMessage(String message) {
+		//TODO 此处的乘客id应该从连接 中获取 ，taxi同理
 		Trace trace = JSONUtils.getJsonSupport().parseObject(message, Trace.class);
 		if (trace == null) {
 			return;
