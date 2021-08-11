@@ -54,10 +54,7 @@ function initMap(taxiId, websocket) {
 			
 			var trace = {
 				"id":taxiId,
-				"location":{
-					"longitude": data.position.lng,
-					"latitude": data.position.lat
-				}
+				"location": toLocation(data)
 			}
 			//位置上报
 			websocket.send(JSON.stringify(trace));
@@ -65,6 +62,43 @@ function initMap(taxiId, websocket) {
 
 		function onError(data) {
 			alert(data.message);
+		}
+	})
+}
+
+/**
+ * 抢单
+ * @param {Object} taxiId
+ * @param {Object} orderId
+ */
+function grabOrder(taxiId, orderId){
+	$.ajax({
+		method: "POST",
+		url: "../taxi/grab_order",
+		data:JSON.stringify({
+			"taxiId": taxiId,
+			"orderId": orderId
+		}),
+		contentType: "application/json;charset=utf-8",
+		dataType: "json",
+		success:function(data){
+			console.log(data);
+		}
+	})
+}
+
+function confirmOrder(taxiId, orderId){
+	$.ajax({
+		method: "POST",
+		url: "../taxi/confirm_order",
+		data:JSON.stringify({
+			"taxiId": taxiId,
+			"orderId": orderId
+		}),
+		contentType: "application/json;charset=utf-8",
+		dataType: "json",
+		success:function(data){
+			console.log(data);
 		}
 	})
 }

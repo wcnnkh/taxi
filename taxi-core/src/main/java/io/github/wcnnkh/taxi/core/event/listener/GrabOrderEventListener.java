@@ -41,8 +41,7 @@ public class GrabOrderEventListener implements EventListener<GrabOrderEvent> {
 				break;
 			}
 
-			// TODO 判断订单状态
-			if (System.currentTimeMillis() - order.getCreateTime() > order.getDispatchTimeout()) {
+			if (isDispatchTimeout(order)) {
 				// 调度超时
 				if(orderService.updateStatus(event.getGrabOrderRequest(), OrderStatus.NO_SUPPLY)) {
 					Order newOrder = new Order();
@@ -70,4 +69,7 @@ public class GrabOrderEventListener implements EventListener<GrabOrderEvent> {
 		}
 	}
 
+	protected boolean isDispatchTimeout(Order order) {
+		return System.currentTimeMillis() - order.getCreateTime() > order.getDispatchTimeout();
+	}
 }

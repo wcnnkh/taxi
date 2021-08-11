@@ -4,23 +4,19 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
-import scw.orm.annotation.PrimaryKey;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "下单请求")
 public class PostOrderRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
-	@Schema(description = "订单号", required = true)
-	@NotNull
-	@PrimaryKey
-	private String orderId;
 	@Schema(description = "下单的乘客id")
 	private String passengerId;
 	@Schema(description = "上车地点")
+	@NotNull
 	private Location startLocation;
 	@Schema(description = "下车地点")
 	private Location endLocation;
-	@Schema(description = "调度超时时间")
+	@Schema(description = "调度超时时间, 单位(毫秒)")
 	private Long dispatchTimeout;
 
 	public String getPassengerId() {
@@ -29,14 +25,6 @@ public class PostOrderRequest implements Serializable {
 
 	public void setPassengerId(String passengerId) {
 		this.passengerId = passengerId;
-	}
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
 	}
 
 	public Location getStartLocation() {

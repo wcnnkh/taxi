@@ -2,22 +2,26 @@ package io.github.wcnnkh.taxi.simple;
 
 import io.github.wcnnkh.taxi.core.dto.GrabOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.Order;
+import io.github.wcnnkh.taxi.core.dto.PostOrderRequest;
 import io.github.wcnnkh.taxi.core.enums.OrderStatus;
 import io.github.wcnnkh.taxi.core.service.OrderService;
 import scw.context.annotation.Provider;
 import scw.core.Ordered;
 import scw.db.DB;
+import scw.mapper.Copy;
 import scw.sql.SimpleSql;
 import scw.sql.Sql;
+import scw.util.XUtils;
 
 @Provider(order = Ordered.LOWEST_PRECEDENCE)
-public class OrderServiceImpl implements OrderService {
+public class SimpleOrderServiceImpl implements OrderService {
 	private final DB db;
 
-	public OrderServiceImpl(DB db) {
+	public SimpleOrderServiceImpl(DB db) {
 		this.db = db;
+		db.createTable(Order.class, false);
 	}
-
+	
 	@Override
 	public Order getOrder(String orderId) {
 		return db.getById(Order.class, orderId);
@@ -50,4 +54,14 @@ public class OrderServiceImpl implements OrderService {
 		return db.update(sql) > 0;
 	}
 
+	@Override
+	public Order record(PostOrderRequest request) {
+		Order order = new Order();
+		order.setId(XUtils.getUUID());
+		Copy.copy(order, request);
+		order.setStatus(OrderStatus.RECORD.getCode());
+		order.setCreateTime(System.currentTimeMillis());
+		db.save(order);
+		return order;
+	}
 }

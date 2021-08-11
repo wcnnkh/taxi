@@ -14,11 +14,12 @@ public class NearbyTaxiQuery implements Serializable {
 	private Location location;
 	@Schema(description = "车辆状态")
 	private TaxiStatus taxiStatus;
-	@Schema(description = "查询的范围，单位：米", required = true)
+	@Schema(description = "查询的范围，单位：米", required = true, defaultValue = "5000")
 	@NotNull
-	private Long distance;
+	private Long distance = 5000L;
 	@Schema(description = "返回的最大数量", required = true, defaultValue = "10")
 	@Min(10)
+	@NotNull
 	private int count = 10;
 
 	public Location getLocation() {

@@ -13,12 +13,33 @@
 		<script src="js/taxi.js"></script>
 	</head>
 	<body>
+		<div id="container"></div> 
 	</body>
 	<script>
 		function createWebsocket(taxiId) {
 			if ("WebSocket" in window) {
 				var url = "ws://" + window.location.host + "/taxi/websocket/" + taxiId;
 				var websocket = new WebSocket(url); //创建WebSocket连接
+				websocket.onclose = function(){
+					var b = confirm("连接已断开，是否重新连接?");
+					if(b){
+						window.location.reload();
+					}
+				}
+				
+				websocket.onmessage = function(event){
+					console.log(event);
+					var order = JSON.parse(event.data);
+					if(order.status == "000"){
+						//有订单可以抢了
+						if(confirm("有新的订单" + order.id + ",是否抢单?")){
+							grabOrder(taxiId, order.id);
+						}
+					}else if(order.status == "100"){
+						//自动确认接单
+						confirmOrder(taxiId, order.id);
+					}
+				}
 				afterConnection(taxiId, websocket);
 			} else {
 				alert("您的浏览器不支持WebSocket");

@@ -8,18 +8,36 @@
 		<link href="css/passenger.css" type="text/css" rel="stylesheet"/>
 		<script src="js/jquery.min.js"></script>
 		<script src="js/jquery.cookie.min.js"></script>
-		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=16bafbda6849ddf82e583a6a9278d831">
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=16bafbda6849ddf82e583a6a9278d831"></script>
 		<script src="js/base.js"></script>
 		<script src="js/passenger.js"></script>	
 	</head>
 	<body>
-		<div id="container"></div> 
+		<div id="container"></div>
+		<div id="op">
+			<button class="post-order">下单</button>
+		</div>
 	</body>
 	<script>
 		function createWebsocket(passengerId) {
 			if ("WebSocket" in window) {
 				var url = "ws://" + window.location.host + "/passenger/websocket/" + passengerId;
 				var websocket = new WebSocket(url); //创建WebSocket连接
+				websocket.onclose = function(){
+					var b = confirm("连接已断开，是否重新连接?");
+					if(b){
+						window.location.reload();
+					}
+				}
+				
+				websocket.onmessage = function(event){
+					console.log(event);
+					var order = JSON.parse(event.data);
+					if(order.status == "200"){
+						//司机已确认接单
+						alert("你的订单" + order.id + "已被司机" + order.taxiId + "确认接单");
+					}
+				}
 				afterConnection(passengerId, websocket);
 			} else {
 				alert("您的浏览器不支持WebSocket");

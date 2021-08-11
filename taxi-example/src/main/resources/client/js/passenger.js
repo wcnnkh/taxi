@@ -45,19 +45,15 @@ function initMap(passengerId, websocket) {
 
 		function onComplete(data) {
 			// data是具体的定位信息
-			console.log(data)
 			var position = [data.position.lng, data.position.lat];
 			map.setCenter(position);
 			map.setZoom(17);
 			marker.setTitle(data.formattedAddress);
 			marker.setPosition(position);
-			
+
 			var trace = {
-				"id":passengerId,
-				"location":{
-					"longitude": data.position.lng,
-					"latitude": data.position.lat
-				}
+				"id": passengerId,
+				"location": toLocation(data)
 			}
 			//位置上报
 			websocket.send(JSON.stringify(trace));
@@ -66,5 +62,25 @@ function initMap(passengerId, websocket) {
 		function onError(data) {
 			alert(data.message);
 		}
+
+		$("button.post-order").click(function() {
+			geolocation.getCurrentPosition(function(status, result) {
+				console.log(result);
+				$.ajax({
+					method: "POST",
+					url: "../passenger/post_order",
+					data:JSON.stringify({
+						"passengerId": passengerId,
+						"startLocation": toLocation(result)
+					}),
+					contentType: "application/json;charset=utf-8",
+					dataType: "json",
+					success:function(data){
+						console.log(data);
+						alert("下单成功,订单号：" + data.data.id);
+					}
+				})
+			})
+		})
 	})
 }

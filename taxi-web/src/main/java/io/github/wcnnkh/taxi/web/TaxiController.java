@@ -27,4 +27,15 @@ public class TaxiController {
 		dispatchService.grabOrder(request);
 		return resultFactory.success();
 	}
+	
+	@Operation(description = "确认接单")
+	@POST
+	@Path("confirm_order")
+	public Result confirm_order(@RequestBody GrabOrderRequest request) {
+		boolean success = dispatchService.confirmOrder(request);
+		if(success) {
+			return resultFactory.success();
+		}
+		return resultFactory.error("确认失败");
+	}
 }

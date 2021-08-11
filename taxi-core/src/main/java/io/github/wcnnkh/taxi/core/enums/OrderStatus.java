@@ -5,9 +5,7 @@ public enum OrderStatus {
 	PRE_CONFIRM("100", "预确认接口"),
 	CONFIRM_TIMEOUT("110", "确认超时"),
 	CONFIRM("200", "确认接单"),
-	
-	CANCEL("500", "取消"),
-	NO_SUPPLY("510", "无供");
+	NO_SUPPLY("300", "无供");
 
 	private final String code;
 	private final String description;
@@ -31,6 +29,6 @@ public enum OrderStatus {
 	 * @return
 	 */
 	public static boolean canGrabOrder(String status) {
-		return RECORD.getCode().equals(status) || CONFIRM_TIMEOUT.getCode().equals(status);
+		return RECORD.getCode().equals(status);
 	}
 }
