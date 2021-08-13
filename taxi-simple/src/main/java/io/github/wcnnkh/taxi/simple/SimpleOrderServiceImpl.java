@@ -9,6 +9,9 @@ import scw.context.annotation.Provider;
 import scw.core.Ordered;
 import scw.db.DB;
 import scw.mapper.Copy;
+import scw.orm.sql.StandardTableStructure;
+import scw.orm.sql.TableStructure;
+import scw.orm.sql.TableStructureMapProcessor;
 import scw.sql.SimpleSql;
 import scw.sql.Sql;
 import scw.util.XUtils;
@@ -16,10 +19,12 @@ import scw.util.XUtils;
 @Provider(order = Ordered.LOWEST_PRECEDENCE)
 public class SimpleOrderServiceImpl implements OrderService {
 	private final DB db;
+	private final TableStructure tableStructure = StandardTableStructure.wrapper(Order.class);
 
 	public SimpleOrderServiceImpl(DB db) {
 		this.db = db;
-		db.createTable(Order.class, false);
+		db.createTable(tableStructure);
+		db.getMapper().register(Order.class, new TableStructureMapProcessor<>(tableStructure));
 	}
 	
 	@Override
@@ -61,7 +66,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 		Copy.copy(order, request);
 		order.setStatus(OrderStatus.RECORD.getCode());
 		order.setCreateTime(System.currentTimeMillis());
-		db.save(order);
+		db.save(tableStructure, order);
 		return order;
 	}
 }

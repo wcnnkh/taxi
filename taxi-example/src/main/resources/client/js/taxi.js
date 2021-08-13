@@ -61,7 +61,7 @@ function initMap(taxiId, websocket) {
 		}
 
 		function onError(data) {
-			alert(data.message);
+			console.log(data);
 		}
 	})
 }

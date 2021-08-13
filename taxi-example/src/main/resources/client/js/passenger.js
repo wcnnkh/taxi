@@ -60,7 +60,7 @@ function initMap(passengerId, websocket) {
 		}
 
 		function onError(data) {
-			alert(data.message);
+			console.log(data);
 		}
 
 		$("button.post-order").click(function() {

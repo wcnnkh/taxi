@@ -2,8 +2,10 @@ package io.github.wcnnkh.taxi.core.dto;
 
 import java.io.Serializable;
 
+import scw.orm.annotation.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Entity
 public class TaxiStatus implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Schema(description = "是否上班中")

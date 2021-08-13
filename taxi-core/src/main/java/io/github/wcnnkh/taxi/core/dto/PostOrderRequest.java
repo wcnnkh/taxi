@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
+import scw.orm.annotation.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Entity
 @Schema(description = "下单请求")
 public class PostOrderRequest implements Serializable {
 	private static final long serialVersionUID = 1L;

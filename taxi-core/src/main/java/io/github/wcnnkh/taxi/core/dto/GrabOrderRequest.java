@@ -2,8 +2,10 @@ package io.github.wcnnkh.taxi.core.dto;
 
 import java.io.Serializable;
 
+import scw.orm.annotation.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Entity
 @Schema(description = "抢单请求")
 public class GrabOrderRequest implements Serializable {
 	private static final long serialVersionUID = 1L;

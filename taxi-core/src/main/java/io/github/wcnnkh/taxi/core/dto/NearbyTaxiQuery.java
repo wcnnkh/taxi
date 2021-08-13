@@ -7,6 +7,9 @@ import java.io.Serializable;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import scw.orm.annotation.Entity;
+
+@Entity
 public class NearbyTaxiQuery implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Schema(description = "位置", required = true)
