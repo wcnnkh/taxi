@@ -1,7 +1,5 @@
 package io.github.wcnnkh.taxi.core.event.listener;
 
-import java.util.concurrent.TimeUnit;
-
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.enums.OrderStatus;
 import io.github.wcnnkh.taxi.core.event.ConfirmTimeoutEventDispatcher;
@@ -10,6 +8,9 @@ import io.github.wcnnkh.taxi.core.event.OrderStatusEvent;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
 import io.github.wcnnkh.taxi.core.service.OrderService;
 import io.github.wcnnkh.taxi.core.service.impl.DispatchServiceImpl;
+
+import java.util.concurrent.TimeUnit;
+
 import scw.event.EventListener;
 import scw.logger.Logger;
 import scw.logger.LoggerFactory;
@@ -53,19 +54,22 @@ public class GrabOrderEventListener implements EventListener<GrabOrderEvent> {
 				break;
 			}
 
-			if(!orderService.updateStatus(event.getGrabOrderRequest(), OrderStatus.PRE_CONFIRM)){
-				// 绑定失败，尝试重新绑定
-				continue;
+			if(orderService.updateStatus(event.getGrabOrderRequest(), OrderStatus.PRE_CONFIRM)){
+				Order newOrder = new Order();
+				Copy.copy(newOrder, order);
+				newOrder.setStatus(OrderStatus.PRE_CONFIRM.getCode());
+				orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order, newOrder));
+				
+				//发送一个延迟事件，30s后判断司机是否确认接单，如果没有就当作超时
+				confirmTimeoutEventDispatcher.publishEvent(event, 30, TimeUnit.SECONDS);
+				break;
 			}
-
-			Order newOrder = new Order();
-			Copy.copy(newOrder, order);
-			newOrder.setStatus(OrderStatus.PRE_CONFIRM.getCode());
-			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order, newOrder));
 			
-			//发送一个延迟事件，30s后判断司机是否确认接单，如果没有就当作超时
-			confirmTimeoutEventDispatcher.publishEvent(event, 30, TimeUnit.SECONDS);
-			break;
+			try {
+				Thread.sleep(1000L);
+			} catch (InterruptedException e) {
+				break;
+			}
 		}
 	}
 

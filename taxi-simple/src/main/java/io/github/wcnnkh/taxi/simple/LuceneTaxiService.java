@@ -1,7 +1,13 @@
 package io.github.wcnnkh.taxi.simple;
 
+import io.github.wcnnkh.taxi.core.dto.NearbyTaxiQuery;
+import io.github.wcnnkh.taxi.core.dto.Taxi;
+import io.github.wcnnkh.taxi.core.dto.TaxiStatus;
+import io.github.wcnnkh.taxi.core.dto.Trace;
+import io.github.wcnnkh.taxi.core.dto.TraceLocation;
+import io.github.wcnnkh.taxi.core.service.TaxiService;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,12 +29,6 @@ import org.locationtech.spatial4j.distance.DistanceUtils;
 import org.locationtech.spatial4j.shape.Point;
 import org.locationtech.spatial4j.shape.Shape;
 
-import io.github.wcnnkh.taxi.core.dto.NearbyTaxiQuery;
-import io.github.wcnnkh.taxi.core.dto.Taxi;
-import io.github.wcnnkh.taxi.core.dto.TaxiStatus;
-import io.github.wcnnkh.taxi.core.dto.Trace;
-import io.github.wcnnkh.taxi.core.dto.TraceLocation;
-import io.github.wcnnkh.taxi.core.service.TaxiService;
 import scw.context.annotation.Provider;
 import scw.core.Ordered;
 import scw.lucene.DefaultLuceneTemplete;
@@ -77,15 +77,8 @@ public class LuceneTaxiService implements TaxiService {
 		SpatialArgs args = new SpatialArgs(SpatialOperation.Intersects, shape);
 		Query luceneQuery = strategy.makeQuery(args);
 		SearchParameters parameters = new SearchParameters(luceneQuery, query.getCount());
-		
-		List<Taxi> taxis = new ArrayList<Taxi>();
 		SearchResults<Taxi> results = luceneTemplate.search(parameters, mapper);
-		taxis.addAll(results.rows());
-		while(results.hasNext() && taxis.size() < query.getCount()){
-			results = results.next();
-			taxis.addAll(results.rows());
-		}
-		return results.rows().stream().limit(query.getCount()).collect(Collectors.toList());
+		return results.streamAll().limit(query.getCount()).collect(Collectors.toList());
 	}
 
 	private ScoreDocMapper<Taxi> mapper = new ScoreDocMapper<Taxi>() {

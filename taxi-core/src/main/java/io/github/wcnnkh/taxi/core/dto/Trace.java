@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
+import scw.mapper.MapperUtils;
 import scw.orm.annotation.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -30,5 +31,10 @@ public class Trace implements Serializable {
 
 	public void setLocation(TraceLocation location) {
 		this.location = location;
+	}
+	
+	@Override
+	public String toString() {
+		return MapperUtils.toString(this);
 	}
 }

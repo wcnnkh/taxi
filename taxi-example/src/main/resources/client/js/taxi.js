@@ -45,7 +45,6 @@ function initMap(taxiId, websocket) {
 
 		function onComplete(data) {
 			// data是具体的定位信息
-			console.log(data)
 			var position = [data.position.lng, data.position.lat];
 			map.setCenter(position);
 			map.setZoom(17);
