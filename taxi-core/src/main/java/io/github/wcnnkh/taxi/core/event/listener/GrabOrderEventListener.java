@@ -57,6 +57,7 @@ public class GrabOrderEventListener implements EventListener<GrabOrderEvent> {
 			if(orderService.updateStatus(event.getGrabOrderRequest(), OrderStatus.PRE_CONFIRM)){
 				Order newOrder = new Order();
 				Copy.copy(newOrder, order);
+				newOrder.setTaxiId(event.getGrabOrderRequest().getTaxiId());
 				newOrder.setStatus(OrderStatus.PRE_CONFIRM.getCode());
 				orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order, newOrder));
 				

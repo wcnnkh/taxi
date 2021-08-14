@@ -40,6 +40,7 @@ public class PassengerController {
 
 	@Operation(description = "获取乘客附近车辆")
 	@GET
+	@POST
 	@Path("nearby_taxi")
 	public DataResult<List<Taxi>> getNearbyTaxi(@RequestBody NearbyTaxiQuery query) {
 		List<Taxi> list = taxiService.getNearbyTaxis(query);

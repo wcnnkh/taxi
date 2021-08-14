@@ -21,7 +21,7 @@ function initMap(taxiId, websocket) {
 			// 是否使用高精度定位，默认：true
 			enableHighAccuracy: true,
 			// 设置定位超时时间，默认：无穷大
-			timeout: 10000,
+			timeout: 5000,
 			// 定位按钮的停靠位置的偏移量，默认：Pixel(10, 20)
 			buttonOffset: new AMap.Pixel(10, 20),
 			//  定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
@@ -33,23 +33,24 @@ function initMap(taxiId, websocket) {
 		geolocation.getCurrentPosition()
 		setInterval(function() {
 			geolocation.getCurrentPosition()
+			
 		}, 5000)
 		AMap.event.addListener(geolocation, 'complete', onComplete)
 		AMap.event.addListener(geolocation, 'error', onError)
 
-		var marker = new AMap.Marker({
+		var selfMarker = new AMap.Marker({
 			offset: new AMap.Pixel(-10, -10),
-			icon: '//vdata.amap.com/icons/b18/1/2.png', // 添加 Icon 图标 URL
+			icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png', // 添加 Icon 图标 URL
 		});
-		map.add(marker);
+		map.add(selfMarker);
 
 		function onComplete(data) {
 			// data是具体的定位信息
 			var position = [data.position.lng, data.position.lat];
 			map.setCenter(position);
 			map.setZoom(17);
-			marker.setTitle(data.formattedAddress);
-			marker.setPosition(position);
+			selfMarker.setTitle(data.formattedAddress);
+			selfMarker.setPosition(position);
 			
 			var trace = {
 				"id":taxiId,
