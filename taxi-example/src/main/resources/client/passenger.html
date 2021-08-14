@@ -14,6 +14,7 @@
 	</head>
 	<body>
 		<div id="container"></div>
+		<h3 id="passengerId"></h3>
 		<div id="op">
 			<button class="post-order">下单</button>
 		</div>
@@ -62,6 +63,7 @@
 		})
 
 		function afterConnection(passengerId, websocket) {
+			$("#passengerId").html(passengerId);
 			initMap(passengerId, websocket);
 		}
 	</script>

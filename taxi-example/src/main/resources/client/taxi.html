@@ -13,7 +13,8 @@
 		<script src="js/taxi.js"></script>
 	</head>
 	<body>
-		<div id="container"></div> 
+		<div id="container"></div>
+		<h3 id="taxiId"></h3>
 	</body>
 	<script>
 		function createWebsocket(taxiId) {
@@ -64,6 +65,7 @@
 		})
 		
 		function afterConnection(taxiId, websocket) {
+			$("#taxiId").html(taxiId);
 			initMap(taxiId, websocket);
 		}
 	</script>
