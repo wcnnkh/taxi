@@ -89,6 +89,7 @@ function initMap(passengerId, websocket) {
 		}
 
 		function onComplete(data) {
+			$("#geo-log").html(new Date() + ":<br/>" + JSON.stringify(data));
 			//这种写法极端情况下会出现标记点混乱的问题(如：上一个还未标记完就被下一次清空了)
 			refreshNearbyTaxi(data);
 			
@@ -109,11 +110,15 @@ function initMap(passengerId, websocket) {
 
 		function onError(data) {
 			console.log(data);
+			$("#geo-log").html(new Date() + ":<br/>" + JSON.stringify(data));
 		}
 
 		$("button.post-order").click(function() {
 			geolocation.getCurrentPosition(function(status, result) {
-				console.log(result);
+				if(status == "error"){
+					alert("下单失败，无法获取位置信息[" + result.message + "]");
+					return ;
+				}
 				$.ajax({
 					method: "POST",
 					url: "../passenger/post_order",

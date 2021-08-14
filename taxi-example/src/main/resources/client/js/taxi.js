@@ -45,6 +45,7 @@ function initMap(taxiId, websocket) {
 		map.add(selfMarker);
 
 		function onComplete(data) {
+			$("#geo-log").html(new Date() + ":<br/>" + JSON.stringify(data));
 			// data是具体的定位信息
 			var position = [data.position.lng, data.position.lat];
 			map.setCenter(position);
@@ -62,6 +63,7 @@ function initMap(taxiId, websocket) {
 
 		function onError(data) {
 			console.log(data);
+			$("#geo-log").html(new Date() + ":<br/>" + JSON.stringify(data));
 		}
 	})
 }
