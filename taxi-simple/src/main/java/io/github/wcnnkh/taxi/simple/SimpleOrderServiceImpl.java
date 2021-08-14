@@ -15,6 +15,7 @@ import scw.orm.sql.TableStructureMapProcessor;
 import scw.sql.SimpleSql;
 import scw.sql.Sql;
 import scw.util.XUtils;
+import scw.util.page.Page;
 
 @Provider(order = Ordered.LOWEST_PRECEDENCE)
 public class SimpleOrderServiceImpl implements OrderService {
@@ -68,5 +69,18 @@ public class SimpleOrderServiceImpl implements OrderService {
 		order.setCreateTime(System.currentTimeMillis());
 		db.save(tableStructure, order);
 		return order;
+	}
+
+	@Override
+	public Page<Order> getPassengerOrders(String passengerId, long pageNumber,
+			long limit) {
+		Sql sql = new SimpleSql("select * from `order` where passengerId=? order createTime desc", passengerId);
+		return db.getPage(Order.class, sql, pageNumber, limit);
+	}
+
+	@Override
+	public Page<Order> getTaxiOrders(String taxiId, long pageNumber, long limit) {
+		Sql sql = new SimpleSql("select * from `order` where taxiId=? order createTime desc", taxiId);
+		return db.getPage(Order.class, sql, pageNumber, limit);
 	}
 }

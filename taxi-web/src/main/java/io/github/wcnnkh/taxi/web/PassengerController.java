@@ -5,6 +5,7 @@ import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.dto.PostOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.Taxi;
 import io.github.wcnnkh.taxi.core.service.DispatchService;
+import io.github.wcnnkh.taxi.core.service.OrderService;
 import io.github.wcnnkh.taxi.core.service.TaxiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -19,6 +20,7 @@ import javax.ws.rs.Path;
 import scw.beans.annotation.Autowired;
 import scw.context.result.DataResult;
 import scw.context.result.ResultFactory;
+import scw.util.page.Page;
 
 @Tag(name = "乘客操作")
 @Path("/passenger")
@@ -29,6 +31,8 @@ public class PassengerController {
 	private DispatchService dispatchService;
 	@Autowired
 	private TaxiService taxiService;
+	@Autowired
+	private OrderService orderService;
 
 	@Operation(description = "下单")
 	@POST
@@ -45,5 +49,11 @@ public class PassengerController {
 	public DataResult<List<Taxi>> getNearbyTaxi(@RequestBody NearbyTaxiQuery query) {
 		List<Taxi> list = taxiService.getNearbyTaxis(query);
 		return resultFactory.success(list);
+	}
+	
+	@GET
+	@Path("/orders")
+	public DataResult<Page<Order>> getOrders(String passengerId, long pageNumber, long limit){
+		return resultFactory.success(orderService.getPassengerOrders(passengerId, pageNumber, limit));
 	}
 }

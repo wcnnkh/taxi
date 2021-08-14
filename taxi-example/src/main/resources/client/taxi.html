@@ -18,7 +18,7 @@
 	<script>
 		function createWebsocket(taxiId) {
 			if ("WebSocket" in window) {
-				var url = "ws://" + window.location.host + "/taxi/websocket/" + taxiId;
+				var url = getWebSocketRootPath() + "/taxi/websocket/" + taxiId;
 				var websocket = new WebSocket(url); //创建WebSocket连接
 				websocket.onclose = function(){
 					var b = confirm("连接已断开，是否重新连接?");

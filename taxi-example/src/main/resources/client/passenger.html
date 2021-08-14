@@ -21,7 +21,7 @@
 	<script>
 		function createWebsocket(passengerId) {
 			if ("WebSocket" in window) {
-				var url = "ws://" + window.location.host + "/passenger/websocket/" + passengerId;
+				var url =  getWebSocketRootPath() + "/passenger/websocket/" + passengerId;
 				var websocket = new WebSocket(url); //创建WebSocket连接
 				websocket.onclose = function(){
 					var b = confirm("连接已断开，是否重新连接?");
