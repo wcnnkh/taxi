@@ -25,6 +25,10 @@
 			<groupId>scw</groupId>
 			<artifactId>scw-sqlite</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>scw</groupId>
+			<artifactId>scw-log4j</artifactId>
+		</dependency>
 	</dependencies>
 	
 	<build>
