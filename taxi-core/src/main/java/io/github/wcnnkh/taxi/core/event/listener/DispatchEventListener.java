@@ -11,6 +11,7 @@ import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
 import io.github.wcnnkh.taxi.core.service.TaxiService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import scw.core.utils.StringUtils;
 import scw.event.EventListener;
@@ -47,7 +48,7 @@ public class DispatchEventListener implements EventListener<OrderStatusEvent> {
 				taxiStatus.setOperation(false);
 				nearbyTaxiQuery.setTaxiStatus(taxiStatus);
 				List<Taxi> taxis = taxiService.getNearbyTaxis(nearbyTaxiQuery);
-				logger.info("{}需要通知的司机列表:{}", event.getOrder().getId(), taxis);
+				logger.info("订单{}需要通知的司机列表:{}", event.getOrder().getId(), taxis.stream().map((m) -> m.getId()).collect(Collectors.toList()));
 				for (Taxi taxi : taxis) {
 					Order order = new Order();
 					Copy.copy(order, event.getOrder());

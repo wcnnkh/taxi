@@ -14,11 +14,16 @@
 	</head>
 	<body>
 		<div id="container"></div>
-		<h3 id="passengerId"></h3>
-		<h5 id="geo-log"></h5>
 		<div id="op">
 			<button class="post-order">下单</button>
 		</div>
+		<h3 id="passengerId"></h3>
+		<br/>
+		<h5 id="geo-log"></h5>
+		<br/>
+		<h5 id="message-log"></h5>
+		<br/>
+		<h5 id="nearby-taxi-log"></h5>
 	</body>
 	<script>
 		function createWebsocket(passengerId) {
@@ -34,6 +39,7 @@
 				
 				websocket.onmessage = function(event){
 					console.log(event);
+					$("#message-log").html(new Date() + ":<br/>" + event.data);
 					var order = JSON.parse(event.data);
 					if(order.status == "200"){
 						//司机已确认接单

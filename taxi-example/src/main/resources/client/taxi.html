@@ -15,7 +15,10 @@
 	<body>
 		<div id="container"></div>
 		<h3 id="taxiId"></h3>
+		<br/>
 		<h5 id="geo-log"></h5>
+		<br/>
+		<h5 id="message-log"></h5>
 	</body>
 	<script>
 		function createWebsocket(taxiId) {
@@ -31,6 +34,7 @@
 				
 				websocket.onmessage = function(event){
 					console.log(event);
+					$("#message-log").html(new Date() + ":<br/>" + event.data);
 					var order = JSON.parse(event.data);
 					if(order.status == "000"){
 						//有订单可以抢了

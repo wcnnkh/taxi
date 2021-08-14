@@ -68,6 +68,7 @@ function initMap(passengerId, websocket) {
 				contentType: "application/json;charset=utf-8",
 				dataType: "json",
 				success:function(data){
+					$("#nearby-taxi-log").html(new Date() + ":<br/>" + JSON.stringify(data));
 					clearMarkers();
 					data.data.forEach((taxi) => {
 						var marker = toMarker(taxi);
