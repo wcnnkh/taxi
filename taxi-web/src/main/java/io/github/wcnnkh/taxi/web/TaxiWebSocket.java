@@ -27,7 +27,7 @@ import scw.web.servlet.socket.ContainerConfigurator;
 @ServerEndpoint(value = "/taxi/websocket/{taxiId}", configurator = ContainerConfigurator.class)
 public class TaxiWebSocket implements EventListener<OrderStatusEvent> {
 	private static Logger logger = LoggerFactory.getLogger(TaxiWebSocket.class);
-	private ConcurrentHashMap<String, Session> sessionMap = new ConcurrentHashMap<>();
+	private static ConcurrentHashMap<String, Session> sessionMap = new ConcurrentHashMap<>();
 	private final TaxiService taxiService;
 
 	public TaxiWebSocket(TaxiService taxiService, OrderStatusEventDispatcher orderStatusEventDispatcher) {
@@ -66,9 +66,8 @@ public class TaxiWebSocket implements EventListener<OrderStatusEvent> {
 	public void onClose(Session session) throws IOException {
 		String taxiId = (String) session.getUserProperties().get("taxiId");
 		logger.info("{}关闭连接{}", session.getId(), taxiId);
-		Session oldSession = sessionMap.remove(taxiId);
-		if (oldSession != null) {
-			oldSession.close();
+		if(taxiId != null){
+			sessionMap.remove(taxiId);
 		}
 	}
 
