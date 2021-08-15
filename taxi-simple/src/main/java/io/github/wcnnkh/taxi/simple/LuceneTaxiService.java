@@ -46,7 +46,7 @@ public class LuceneTaxiService implements TaxiService {
 
 	public LuceneTaxiService() {
 		// SpatialPrefixTree也可以通过SpatialPrefixTreeFactory工厂类构建
-		SpatialPrefixTree grid = new GeohashPrefixTree(spatialContext, 11);
+		SpatialPrefixTree grid = new GeohashPrefixTree(spatialContext, GeohashPrefixTree.getMaxLevelsPossible());
 		this.strategy = new RecursivePrefixTreeStrategy(grid, "geoField");
 	}
 
@@ -63,6 +63,7 @@ public class LuceneTaxiService implements TaxiService {
 
 	@Override
 	public void report(Trace trace) {
+		trace.getLocation().setTime(System.currentTimeMillis());
 		FastValidator.validate(trace);
 		Document document = new Document();
 		writeDocument(document, trace);
@@ -73,12 +74,18 @@ public class LuceneTaxiService implements TaxiService {
 	@Override
 	public List<Taxi> getNearbyTaxis(NearbyTaxiQuery query) {
 		Shape shape = spatialContext.getShapeFactory().circle(query.getLocation().getLongitude(), query.getLocation().getLatitude(), DistanceUtils.dist2Degrees(query.getDistance(),
-				DistanceUtils.EARTH_MEAN_RADIUS_MI));
+				DistanceUtils.EARTH_MEAN_RADIUS_KM));
 		SpatialArgs args = new SpatialArgs(SpatialOperation.Intersects, shape);
 		Query luceneQuery = strategy.makeQuery(args);
 		SearchParameters parameters = new SearchParameters(luceneQuery, query.getCount());
 		SearchResults<Taxi> results = luceneTemplate.search(parameters, mapper);
-		return results.streamAll().limit(query.getCount()).collect(Collectors.toList());
+		return results.streamAll().filter((taxi) -> {
+			//超过60秒未上传心跳就忽略
+			if(System.currentTimeMillis() - taxi.getLocation().getTime() > 60000L){
+				return false;
+			}
+			return true;
+		}).limit(query.getCount()).collect(Collectors.toList());
 	}
 
 	private ScoreDocMapper<Taxi> mapper = new ScoreDocMapper<Taxi>() {
@@ -99,6 +106,7 @@ public class LuceneTaxiService implements TaxiService {
 
 	@Override
 	public Taxi getTaxi(String taxiId) {
+		
 		TermQuery termQuery = new TermQuery(new Term("id", taxiId));
 		return luceneTemplate.search(new SearchParameters(termQuery, 1),
 				mapper).first();

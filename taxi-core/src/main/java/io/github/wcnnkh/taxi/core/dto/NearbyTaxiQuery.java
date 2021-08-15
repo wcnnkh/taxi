@@ -17,9 +17,9 @@ public class NearbyTaxiQuery implements Serializable {
 	private Location location;
 	@Schema(description = "车辆状态")
 	private TaxiStatus taxiStatus;
-	@Schema(description = "查询的范围，单位：米", required = true, defaultValue = "5000")
+	@Schema(description = "查询的范围，单位：千米", required = true, defaultValue = "5")
 	@NotNull
-	private Long distance = 5000L;
+	private Double distance = 5D;
 	@Schema(description = "返回的最大数量", required = true, defaultValue = "10")
 	@Min(10)
 	@NotNull
@@ -41,11 +41,11 @@ public class NearbyTaxiQuery implements Serializable {
 		this.taxiStatus = taxiStatus;
 	}
 
-	public Long getDistance() {
+	public Double getDistance() {
 		return distance;
 	}
 
-	public void setDistance(Long distance) {
+	public void setDistance(Double distance) {
 		this.distance = distance;
 	}
 

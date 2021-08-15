@@ -51,6 +51,7 @@ public class LucenePassengerService implements PassengerService{
 	
 	@Override
 	public void report(Trace trace) {
+		trace.getLocation().setTime(System.currentTimeMillis());
 		FastValidator.validate(trace);
 		Document document = new Document();
 		writeDocument(document, trace);
