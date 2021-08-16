@@ -3,11 +3,15 @@
 	<head>
 		<meta charset="utf-8">
 		<title></title>
-		<meta name="viewport" content="initial-scale=1.0, user-scalable=no"> 
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+		<!-- 引入 layui.css -->
+		<link rel="stylesheet" href="https://www.layuicdn.com/layui/css/layui.css"/> 
 		<link href="css/base.css" rel="stylesheet"/>
 		<link href="css/passenger.css" rel="stylesheet"/>
 		<script src="js/jquery.min.js"></script>
 		<script src="js/jquery.cookie.min.js"></script>
+		<!-- 引入 layui.js -->
+		<script src="https://www.layuicdn.com/layui/layui.js"></script>
 		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=16bafbda6849ddf82e583a6a9278d831"></script> 
 		<script src="js/base.js"></script>
 		<script src="js/taxi.js"></script>
@@ -38,11 +42,12 @@
 					var order = JSON.parse(event.data);
 					if(order.status == "000"){
 						//有订单可以抢了
-						setTimeout(function(){
-							if(confirm("有新的订单" + order.id + ",是否抢单?")){
-								grabOrder(taxiId, order.id);
-							}
-						}, 10)
+						layer.confirm("有新的订单" + order.id + ",是否抢单?", {
+						  btn: ['是', '否'] //可以无限个按钮
+						},function(index, layero){
+							grabOrder(taxiId, order.id);
+							return true;
+						});
 					}else if(order.status == "100"){
 						//自动确认接单
 						confirmOrder(taxiId, order.id);

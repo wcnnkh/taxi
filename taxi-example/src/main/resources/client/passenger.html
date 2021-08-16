@@ -4,10 +4,14 @@
 		<meta charset="utf-8">
 		<title></title>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+		<!-- 引入 layui.css -->
+		<link rel="stylesheet" href="https://www.layuicdn.com/layui/css/layui.css"/>
 		<link href="css/base.css" type="text/css" rel="stylesheet"/>
 		<link href="css/passenger.css" type="text/css" rel="stylesheet"/>
 		<script src="js/jquery.min.js"></script>
 		<script src="js/jquery.cookie.min.js"></script>
+		<!-- 引入 layui.js -->
+		<script src="https://www.layuicdn.com/layui/layui.js"></script>
 		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=16bafbda6849ddf82e583a6a9278d831"></script>
 		<script src="js/base.js"></script>
 		<script src="js/passenger.js"></script>	
@@ -43,9 +47,10 @@
 					var order = JSON.parse(event.data);
 					if(order.status == "200"){
 						//司机已确认接单
-						setTimeout(function(){
-							alert("你的订单" + order.id + "已被司机" + order.taxiId + "确认接单");
-						}, 10);
+						layer.open({
+						  title: '接单成功提示',
+						  content: "你的订单" + order.id + "已被司机" + order.taxiId + "确认接单"
+						});
 					}
 				}
 				afterConnection(passengerId, websocket);

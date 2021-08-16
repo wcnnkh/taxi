@@ -37,37 +37,37 @@ function initMap(passengerId, websocket) {
 		AMap.event.addListener(geolocation, 'complete', onComplete)
 		AMap.event.addListener(geolocation, 'error', onError)
 
-		 var selfMarker = new AMap.Marker({
-		 	offset: new AMap.Pixel(-10, -10),
-		 	icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png', // 添加 Icon 图标 URL
-			title: '乘客['+ passengerId +']'
-		 });
-		 map.add(selfMarker);
-		
+		var selfMarker = new AMap.Marker({
+			offset: new AMap.Pixel(-10, -10),
+			icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png', // 添加 Icon 图标 URL
+			title: '乘客[' + passengerId + ']'
+		});
+		map.add(selfMarker);
+
 		var markers = new Array();
 		//清除所有的点 
-		function clearMarkers(){
+		function clearMarkers() {
 			map.remove(markers);
 			markers = new Array();
 		}
-		
+
 		/**
 		 * 刷新附近车辆
 		 * @param {Object} data 当前位置信息
 		 */
-		function refreshNearbyTaxi(data){
+		function refreshNearbyTaxi(data) {
 			$.ajax({
 				method: "POST",
 				url: "../passenger/nearby_taxi",
-				data:JSON.stringify({
+				data: JSON.stringify({
 					"taxiStatus": {
-						"working":true
+						"working": true
 					},
 					"location": toLocation(data)
 				}),
 				contentType: "application/json;charset=utf-8",
 				dataType: "json",
-				success:function(data){
+				success: function(data) {
 					$("#nearby-taxi-log").html(new Date() + ":<br/>" + JSON.stringify(data));
 					clearMarkers();
 					data.data.forEach((taxi) => {
@@ -78,14 +78,14 @@ function initMap(passengerId, websocket) {
 				}
 			})
 		}
-		
-		function toMarker(taxi){
+
+		function toMarker(taxi) {
 			return new AMap.Marker({
 				map: map,
 				offset: new AMap.Pixel(-13, -30),
 				icon: '//vdata.amap.com/icons/b18/1/2.png', // 添加 Icon 图标 URL
 				position: new AMap.LngLat(taxi.location.longitude, taxi.location.latitude),
-				title: '司机['+taxi.id+']'
+				title: '司机[' + taxi.id + ']'
 			});
 		}
 
@@ -93,7 +93,7 @@ function initMap(passengerId, websocket) {
 			$("#geo-log").html(new Date() + ":<br/>" + JSON.stringify(data));
 			//这种写法极端情况下会出现标记点混乱的问题(如：上一个还未标记完就被下一次清空了)
 			refreshNearbyTaxi(data);
-			
+
 			// data是具体的定位信息
 			var position = [data.position.lng, data.position.lat];
 			map.setCenter(position);
@@ -101,12 +101,20 @@ function initMap(passengerId, websocket) {
 			selfMarker.setTitle(data.formattedAddress);
 			selfMarker.setPosition(position);
 
-			var trace = {
-				"id": passengerId,
-				"location": toLocation(data)
+			try {
+				var trace = {
+					"id": passengerId,
+					"location": toLocation(data)
+				}
+				//位置上报
+				websocket.send(JSON.stringify(trace));
+			} catch (e) {
+				layer.open({
+					title: '异常提示',
+					content: "位置上报异常" + e.message
+				});
 			}
-			//位置上报
-			websocket.send(JSON.stringify(trace));
+
 		}
 
 		function onError(data) {
@@ -116,22 +124,25 @@ function initMap(passengerId, websocket) {
 
 		$("button.post-order").click(function() {
 			geolocation.getCurrentPosition(function(status, result) {
-				if(status == "error"){
-					alert("下单失败，无法获取位置信息[" + result.message + "]");
-					return ;
+				if (status == "error") {
+					layer.msg("下单失败，无法获取位置信息[" + result.message + "]");
+					return;
 				}
 				$.ajax({
 					method: "POST",
 					url: "../passenger/post_order",
-					data:JSON.stringify({
+					data: JSON.stringify({
 						"passengerId": passengerId,
 						"startLocation": toLocation(result)
 					}),
 					contentType: "application/json;charset=utf-8",
 					dataType: "json",
-					success:function(data){
+					success: function(data) {
 						console.log(data);
-						alert("下单成功,订单号：" + data.data.id);
+						layer.open({
+							title: '下单成功提示',
+							content: "订单号：" + data.data.id
+						});
 					}
 				})
 			})

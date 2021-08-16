@@ -53,12 +53,19 @@ function initMap(taxiId, websocket) {
 			selfMarker.setTitle(data.formattedAddress);
 			selfMarker.setPosition(position);
 			
-			var trace = {
-				"id":taxiId,
-				"location": toLocation(data)
+			try{
+				var trace = {
+					"id":taxiId,
+					"location": toLocation(data)
+				}
+				//位置上报
+				websocket.send(JSON.stringify(trace));
+			}catch(e){
+				layer.open({
+					title: '异常提示',
+					content: "位置上报异常" + e.message
+				});
 			}
-			//位置上报
-			websocket.send(JSON.stringify(trace));
 		}
 
 		function onError(data) {
