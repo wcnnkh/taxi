@@ -38,9 +38,11 @@
 					var order = JSON.parse(event.data);
 					if(order.status == "000"){
 						//有订单可以抢了
-						if(confirm("有新的订单" + order.id + ",是否抢单?")){
-							grabOrder(taxiId, order.id);
-						}
+						setTimeout(function(){
+							if(confirm("有新的订单" + order.id + ",是否抢单?")){
+								grabOrder(taxiId, order.id);
+							}
+						}, 10)
 					}else if(order.status == "100"){
 						//自动确认接单
 						confirmOrder(taxiId, order.id);

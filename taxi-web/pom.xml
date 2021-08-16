@@ -11,7 +11,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>scw</groupId>
-			<artifactId>scw-web</artifactId>
+			<artifactId>scw-websocket</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.github.wcnkh</groupId>

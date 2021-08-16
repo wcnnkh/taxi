@@ -43,7 +43,9 @@
 					var order = JSON.parse(event.data);
 					if(order.status == "200"){
 						//司机已确认接单
-						alert("你的订单" + order.id + "已被司机" + order.taxiId + "确认接单");
+						setTimeout(function(){
+							alert("你的订单" + order.id + "已被司机" + order.taxiId + "确认接单");
+						}, 10);
 					}
 				}
 				afterConnection(passengerId, websocket);

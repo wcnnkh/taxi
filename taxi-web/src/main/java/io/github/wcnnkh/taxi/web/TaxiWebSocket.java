@@ -1,7 +1,6 @@
 package io.github.wcnnkh.taxi.web;
 
 import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.websocket.CloseReason;
 import javax.websocket.CloseReason.CloseCodes;
@@ -23,11 +22,12 @@ import scw.json.JSONUtils;
 import scw.logger.Logger;
 import scw.logger.LoggerFactory;
 import scw.web.servlet.socket.ContainerConfigurator;
+import scw.websocket.adapter.standard.SafeStandardSessionManager;
 
 @ServerEndpoint(value = "/taxi/websocket/{taxiId}", configurator = ContainerConfigurator.class)
 public class TaxiWebSocket implements EventListener<OrderStatusEvent> {
 	private static Logger logger = LoggerFactory.getLogger(TaxiWebSocket.class);
-	private static ConcurrentHashMap<String, Session> sessionMap = new ConcurrentHashMap<>();
+	private static SafeStandardSessionManager<String> sessionManager = new SafeStandardSessionManager<String>("taxi");
 	private final TaxiService taxiService;
 
 	public TaxiWebSocket(TaxiService taxiService, OrderStatusEventDispatcher orderStatusEventDispatcher) {
@@ -38,37 +38,33 @@ public class TaxiWebSocket implements EventListener<OrderStatusEvent> {
 	@Override
 	public void onEvent(OrderStatusEvent event) {
 		if (StringUtils.isNotEmpty(event.getOrder().getTaxiId())) {
-			Session session = sessionMap.get(event.getOrder().getTaxiId());
-			if (session != null) {
+			sessionManager.getSessions(event.getOrder().getTaxiId()).stream().filter((session) -> session.isOpen()).forEach((session) -> {
 				String message = JSONUtils.getJsonSupport().toJSONString(event.getOrder());
 				try {
 					session.getBasicRemote().sendText(message);
 				} catch (IOException e) {
 					logger.info(e, message);
 				}
-			}
+			});
 		}
 	}
 
 	@OnOpen
 	public void onOpen(Session session, @PathParam("taxiId") String taxiId) throws IOException {
-		logger.info("{}打开连接{}", session.getId(), taxiId);
-		Session oldSession = sessionMap.remove(taxiId);
-		sessionMap.put(taxiId, session);
-		if (oldSession != null) {
-			logger.info("关闭重复的连接:{}", oldSession.getId());
-			oldSession.close(new CloseReason(CloseCodes.NORMAL_CLOSURE, "关闭重复的连接"));
-		}
-		session.getUserProperties().put("taxiId", taxiId);
+		CloseReason closeReason = new CloseReason(CloseCodes.NORMAL_CLOSURE, "关闭重复的连接");
+		sessionManager.remove(taxiId).forEach((s) -> {
+			try {
+				s.close(closeReason);
+			} catch (IOException e) {
+				//ignore
+			}
+		});
+		sessionManager.register(taxiId, session);
 	}
 
 	@OnClose
 	public void onClose(Session session) throws IOException {
-		String taxiId = (String) session.getUserProperties().get("taxiId");
-		logger.info("{}关闭连接{}", session.getId(), taxiId);
-		if(taxiId != null){
-			sessionMap.remove(taxiId);
-		}
+		sessionManager.remove(session);
 	}
 
 	@OnError
