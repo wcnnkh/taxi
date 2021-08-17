@@ -123,29 +123,36 @@ function initMap(passengerId, websocket) {
 		}
 
 		$("button.post-order").click(function() {
-			geolocation.getCurrentPosition(function(status, result) {
-				if (status == "error") {
-					layer.msg("下单失败，无法获取位置信息[" + result.message + "]");
-					return;
-				}
-				$.ajax({
-					method: "POST",
-					url: "../passenger/post_order",
-					data: JSON.stringify({
-						"passengerId": passengerId,
-						"startLocation": toLocation(result)
-					}),
-					contentType: "application/json;charset=utf-8",
-					dataType: "json",
-					success: function(data) {
-						console.log(data);
-						layer.open({
-							title: '下单成功提示',
-							content: "订单号：" + data.data.id
-						});
+			try{
+				geolocation.getCurrentPosition(function(status, result) {
+					if (status == "error") {
+						layer.msg("下单失败，无法获取位置信息[" + result.message + "]");
+						return;
 					}
+					$.ajax({
+						method: "POST",
+						url: "../passenger/post_order",
+						data: JSON.stringify({
+							"passengerId": passengerId,
+							"startLocation": toLocation(result)
+						}),
+						contentType: "application/json;charset=utf-8",
+						dataType: "json",
+						success: function(data) {
+							console.log(data);
+							layer.open({
+								title: '下单成功提示',
+								content: "订单号：" + data.data.id
+							});
+						},
+						error: function(error){
+							layer.msg("下单失[" + error + "]");
+						}
+					})
 				})
-			})
+			}catch(e){
+				layer.msg("代码错误：" + e);
+			}
 		})
 	})
 }

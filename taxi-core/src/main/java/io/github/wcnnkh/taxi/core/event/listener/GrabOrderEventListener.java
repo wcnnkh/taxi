@@ -55,6 +55,7 @@ public class GrabOrderEventListener implements EventListener<GrabOrderEvent> {
 			}
 
 			if(orderService.updateStatus(event.getGrabOrderRequest(), OrderStatus.PRE_CONFIRM)){
+				logger.info("预确认司机：" + event);
 				Order newOrder = new Order();
 				Copy.copy(newOrder, order);
 				newOrder.setTaxiId(event.getGrabOrderRequest().getTaxiId());

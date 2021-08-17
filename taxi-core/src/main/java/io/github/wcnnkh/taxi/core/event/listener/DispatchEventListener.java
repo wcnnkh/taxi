@@ -38,6 +38,7 @@ public class DispatchEventListener implements EventListener<OrderStatusEvent> {
 	@Override
 	public void onEvent(OrderStatusEvent event) {
 		if (StringUtils.isEmpty(event.getOrder().getTaxiId()) && OrderStatus.RECORD.getCode().equals(event.getOrder().getStatus())) {
+			logger.info("收到下单事件，开始调度：{}", event);
 			// 录单，开始发送订单通知给司机让司机抢单
 			Location location = event.getOrder().getStartLocation();
 			if (location != null) {

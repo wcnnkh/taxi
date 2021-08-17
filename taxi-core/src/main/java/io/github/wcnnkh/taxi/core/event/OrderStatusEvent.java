@@ -2,6 +2,7 @@ package io.github.wcnnkh.taxi.core.event;
 
 import io.github.wcnnkh.taxi.core.dto.Order;
 import scw.event.BasicEvent;
+import scw.mapper.MapperUtils;
 
 public class OrderStatusEvent extends BasicEvent {
 	private static final long serialVersionUID = 1L;
@@ -19,5 +20,10 @@ public class OrderStatusEvent extends BasicEvent {
 
 	public Order getOrder() {
 		return order;
+	}
+	
+	@Override
+	public String toString() {
+		return MapperUtils.toString(this);
 	}
 }
