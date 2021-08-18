@@ -83,9 +83,10 @@ function initMap(passengerId, websocket) {
 			return new AMap.Marker({
 				map: map,
 				offset: new AMap.Pixel(-13, -30),
-				icon: '//vdata.amap.com/icons/b18/1/2.png', // 添加 Icon 图标 URL
+				icon: 'img/taxi48.png', // 添加 Icon 图标 URL
 				position: new AMap.LngLat(taxi.location.longitude, taxi.location.latitude),
-				title: '司机[' + taxi.id + ']'
+				title: '司机[' + taxi.id + ']',
+				taxiId: taxi.id
 			});
 		}
 
