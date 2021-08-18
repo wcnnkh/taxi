@@ -5,9 +5,9 @@ import io.github.wcnnkh.taxi.core.event.DispatchEventDispatcher;
 import scw.context.annotation.Provider;
 import scw.core.Ordered;
 import scw.event.ObjectEvent;
-import scw.event.support.SimpleAsyncEventDispatcher;
+import scw.event.support.SimpleDelayEventDispatcher;
 
 @Provider(order = Ordered.LOWEST_PRECEDENCE)
-public class SimpleDispatchEventDispatcher extends SimpleAsyncEventDispatcher<ObjectEvent<Order>>
+public class SimpleDispatchEventDispatcher extends SimpleDelayEventDispatcher<ObjectEvent<Order>>
 		implements DispatchEventDispatcher {
 }

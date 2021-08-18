@@ -39,18 +39,21 @@
 				websocket.onmessage = function(event){
 					console.log(event);
 					$("#message-log").html(new Date() + ":<br/>" + event.data);
-					var order = JSON.parse(event.data);
-					if(order.status == "000"){
-						//有订单可以抢了
-						layer.confirm("有新的订单" + order.id + ",是否抢单?", {
-						  btn: ['是', '否'] //可以无限个按钮
-						},function(index, layero){
-							grabOrder(taxiId, order.id);
-							layer.close(index);
-						});
-					}else if(order.status == "100"){
-						//自动确认接单
-						confirmOrder(taxiId, order.id);
+					var heartbeat = JSON.parse(event.data);
+					if(heartbeat.type == "ORDER"){
+						var order = heartbeat.message;
+						if(order.status == "000"){
+							//有订单可以抢了
+							layer.confirm("有新的订单" + order.id + ",是否抢单?", {
+							  btn: ['是', '否'] //可以无限个按钮
+							},function(index, layero){
+								grabOrder(taxiId, order.id);
+								layer.close(index);
+							});
+						}else if(order.status == "100"){
+							//自动确认接单
+							confirmOrder(taxiId, order.id);
+						}
 					}
 				}
 				afterConnection(taxiId, websocket);

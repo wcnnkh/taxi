@@ -38,14 +38,18 @@ public class TaxiWebSocket implements EventListener<OrderStatusEvent> {
 	@Override
 	public void onEvent(OrderStatusEvent event) {
 		if (StringUtils.isNotEmpty(event.getOrder().getTaxiId())) {
-			sessionManager.getSessions(event.getOrder().getTaxiId()).stream().filter((session) -> session.isOpen()).forEach((session) -> {
-				String message = JSONUtils.getJsonSupport().toJSONString(event.getOrder());
-				try {
-					session.getBasicRemote().sendText(message);
-				} catch (IOException e) {
-					logger.info(e, message);
-				}
-			});
+			sessionManager.getSessions(event.getOrder().getTaxiId()).stream().filter((session) -> session.isOpen())
+					.forEach((session) -> {
+						String message = HeartbeatType.ORDER.wrap(event.getOrder()).toString();
+						if (logger.isDebugEnabled()) {
+							logger.debug("向车辆[{}]推荐消息：{}", event.getOrder().getTaxiId(), message);
+						}
+						try {
+							session.getBasicRemote().sendText(message);
+						} catch (IOException e) {
+							logger.info(e, message);
+						}
+					});
 		}
 	}
 
@@ -56,7 +60,7 @@ public class TaxiWebSocket implements EventListener<OrderStatusEvent> {
 			try {
 				s.close(closeReason);
 			} catch (IOException e) {
-				//ignore
+				// ignore
 			}
 		});
 		sessionManager.register(taxiId, session);
@@ -74,7 +78,10 @@ public class TaxiWebSocket implements EventListener<OrderStatusEvent> {
 
 	@OnMessage
 	public void onMessage(String message) {
-		logger.info("位置上报：" + message);
+		if(logger.isTraceEnabled()) {
+			logger.trace("On message: {}", message);
+		}
+		
 		Trace trace = JSONUtils.getJsonSupport().parseObject(message, Trace.class);
 		if (trace == null) {
 			return;

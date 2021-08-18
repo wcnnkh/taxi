@@ -44,13 +44,16 @@
 				websocket.onmessage = function(event){
 					console.log(event);
 					$("#message-log").html(new Date() + ":<br/>" + event.data);
-					var order = JSON.parse(event.data);
-					if(order.status == "200"){
-						//司机已确认接单
-						layer.open({
-						  title: '接单成功提示',
-						  content: "你的订单" + order.id + "已被司机" + order.taxiId + "确认接单"
-						});
+					var heartbeat = JSON.parse(event.data);
+					if(heartbeat.type == "ORDER"){
+						var order = heartbeat.message;
+						if(order.status == "200"){
+							//司机已确认接单
+							layer.open({
+							  title: '接单成功提示',
+							  content: "你的订单" + order.id + "已被司机" + order.taxiId + "确认接单"
+							});
+						}
 					}
 				}
 				afterConnection(passengerId, websocket);

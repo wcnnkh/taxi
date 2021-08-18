@@ -40,11 +40,14 @@ public class PassengerWebSocket implements EventListener<OrderStatusEvent> {
 	public void onEvent(OrderStatusEvent event) {
 		if (StringUtils.isNotEmpty(event.getOrder().getPassengerId())) {
 			sessionManager.getSessions(event.getOrder().getPassengerId()).stream().forEach((session) -> {
-				String message = JSONUtils.getJsonSupport().toJSONString(event.getOrder());
+				String message = HeartbeatType.ORDER.wrap(event.getOrder()).toString();
+				if(logger.isTraceEnabled()) {
+					logger.trace("向乘客[{}]推荐消息：{}", event.getOrder().getPassengerId(), message);
+				}
 				try {
 					session.getBasicRemote().sendText(message);
 				} catch (IOException e) {
-					logger.info(e, message);
+					logger.error(e, message);
 				}
 			});
 		}
@@ -76,8 +79,11 @@ public class PassengerWebSocket implements EventListener<OrderStatusEvent> {
 
 	@OnMessage
 	public void onMessage(String message) {
-		//TODO 此处的乘客id应该从连接 中获取 ，taxi同理
-		logger.info("位置上报：" + message);
+		//TODO 此处的乘客id应该从连接中获取 ，taxi同理
+		if(logger.isTraceEnabled()) {
+			logger.trace("On message: {}", message);
+		}
+		
 		Trace trace = JSONUtils.getJsonSupport().parseObject(message, Trace.class);
 		if (trace == null) {
 			return;

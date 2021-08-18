@@ -13,6 +13,7 @@ import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
 import io.github.wcnnkh.taxi.core.event.listener.ConfirmTimeoutEventListener;
 import io.github.wcnnkh.taxi.core.event.listener.DispatchEventListener;
 import io.github.wcnnkh.taxi.core.event.listener.GrabOrderEventListener;
+import io.github.wcnnkh.taxi.core.service.DispatchPolicyService;
 import io.github.wcnnkh.taxi.core.service.DispatchService;
 import io.github.wcnnkh.taxi.core.service.OrderService;
 import io.github.wcnnkh.taxi.core.service.TaxiService;
@@ -32,14 +33,15 @@ public class DispatchServiceImpl implements DispatchService {
 	public DispatchServiceImpl(OrderStatusEventDispatcher orderStatusEventDispatcher,
 			DispatchEventDispatcher dispatchEventDispatcher, GrabOrderEventDispatcher grabOrderEventDispatcher,
 			OrderService orderService, TaxiService taxiService,
-			ConfirmTimeoutEventDispatcher confirmTimeoutEventDispatcher) {
+			ConfirmTimeoutEventDispatcher confirmTimeoutEventDispatcher, DispatchPolicyService dispatchPolicyService) {
 		this.orderStatusEventDispatcher = orderStatusEventDispatcher;
 		this.grabOrderEventDispatcher = grabOrderEventDispatcher;
 		this.orderService = orderService;
 		this.dispatchEventDispatcher = dispatchEventDispatcher;
-		grabOrderEventDispatcher.registerListener(
-				new GrabOrderEventListener(orderService, orderStatusEventDispatcher, confirmTimeoutEventDispatcher));
-		dispatchEventDispatcher.registerListener(new DispatchEventListener(taxiService, orderStatusEventDispatcher));
+		grabOrderEventDispatcher.registerListener(new GrabOrderEventListener(orderService, orderStatusEventDispatcher,
+				confirmTimeoutEventDispatcher, dispatchPolicyService));
+		dispatchEventDispatcher.registerListener(new DispatchEventListener(taxiService, orderStatusEventDispatcher,
+				dispatchPolicyService, orderService, dispatchEventDispatcher));
 		confirmTimeoutEventDispatcher.registerListener(new ConfirmTimeoutEventListener(orderService));
 	}
 
