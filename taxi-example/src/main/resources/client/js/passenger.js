@@ -47,8 +47,10 @@ function initMap(passengerId, websocket) {
 		var markers = new Array();
 		//清除所有的点 
 		function clearMarkers() {
-			map.remove(markers);
-			markers = new Array();
+			markers.forEach((m) => {
+				map.remove(m);
+			})
+			
 		}
 
 		/**
