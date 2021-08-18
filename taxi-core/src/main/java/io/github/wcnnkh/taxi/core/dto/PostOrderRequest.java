@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
+import scw.mapper.MapperUtils;
 import scw.orm.annotation.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -51,5 +52,10 @@ public class PostOrderRequest implements Serializable {
 
 	public void setDispatchTimeout(Long dispatchTimeout) {
 		this.dispatchTimeout = dispatchTimeout;
+	}
+	
+	@Override
+	public String toString() {
+		return MapperUtils.toString(this);
 	}
 }

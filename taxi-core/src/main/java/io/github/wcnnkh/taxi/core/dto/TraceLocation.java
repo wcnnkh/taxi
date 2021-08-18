@@ -1,5 +1,6 @@
 package io.github.wcnnkh.taxi.core.dto;
 
+import scw.mapper.MapperUtils;
 import scw.orm.annotation.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -42,5 +43,10 @@ public class TraceLocation extends Location {
 
 	public void setTime(Long time) {
 		this.time = time;
+	}
+	
+	@Override
+	public String toString() {
+		return MapperUtils.toString(this);
 	}
 }

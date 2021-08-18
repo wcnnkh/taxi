@@ -2,6 +2,7 @@ package io.github.wcnnkh.taxi.core.dto;
 
 import java.io.Serializable;
 
+import scw.mapper.MapperUtils;
 import scw.orm.annotation.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -27,5 +28,10 @@ public class TaxiStatus implements Serializable {
 
 	public void setOperation(boolean operation) {
 		this.operation = operation;
+	}
+	
+	@Override
+	public String toString() {
+		return MapperUtils.toString(this);
 	}
 }

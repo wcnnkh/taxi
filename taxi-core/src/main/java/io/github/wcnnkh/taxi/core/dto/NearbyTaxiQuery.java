@@ -7,6 +7,7 @@ import java.io.Serializable;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import scw.mapper.MapperUtils;
 import scw.orm.annotation.Entity;
 
 @Entity
@@ -55,5 +56,10 @@ public class NearbyTaxiQuery implements Serializable {
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+	
+	@Override
+	public String toString() {
+		return MapperUtils.toString(this);
 	}
 }

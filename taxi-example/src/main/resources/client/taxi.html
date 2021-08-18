@@ -46,7 +46,7 @@
 						  btn: ['是', '否'] //可以无限个按钮
 						},function(index, layero){
 							grabOrder(taxiId, order.id);
-							return true;
+							layer.close(index);
 						});
 					}else if(order.status == "100"){
 						//自动确认接单

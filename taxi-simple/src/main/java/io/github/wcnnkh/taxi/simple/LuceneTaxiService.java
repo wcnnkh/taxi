@@ -31,7 +31,7 @@ import org.locationtech.spatial4j.shape.Shape;
 
 import scw.context.annotation.Provider;
 import scw.core.Ordered;
-import scw.lucene.DefaultLuceneTemplete;
+import scw.lucene.DefaultLuceneTemplate;
 import scw.lucene.LuceneTemplate;
 import scw.lucene.ScoreDocMapper;
 import scw.lucene.SearchParameters;
@@ -40,7 +40,7 @@ import scw.validation.FastValidator;
 
 @Provider(order = Ordered.LOWEST_PRECEDENCE)
 public class LuceneTaxiService implements TaxiService {
-	private final LuceneTemplate luceneTemplate = new DefaultLuceneTemplete("taxi");
+	private final LuceneTemplate luceneTemplate = new DefaultLuceneTemplate("taxi");
 	private SpatialContext spatialContext = SpatialContext.GEO;
 	private SpatialStrategy strategy;
 

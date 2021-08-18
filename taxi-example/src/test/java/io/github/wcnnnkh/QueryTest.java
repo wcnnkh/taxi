@@ -3,13 +3,13 @@ package io.github.wcnnnkh;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.TermQuery;
 
-import scw.lucene.DefaultLuceneTemplete;
+import scw.lucene.DefaultLuceneTemplate;
 import scw.lucene.LuceneTemplate;
 import scw.lucene.SearchParameters;
 
 public class QueryTest {
 	public static void main(String[] args) {
-		LuceneTemplate luceneTemplate = new DefaultLuceneTemplete("test");
+		LuceneTemplate luceneTemplate = new DefaultLuceneTemplate("test");
 
 		TestBean bean1 = new TestBean();
 		bean1.setName("a");

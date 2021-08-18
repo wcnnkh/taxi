@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 
 import io.github.wcnnkh.taxi.core.enums.OrderStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
+import scw.mapper.MapperUtils;
 import scw.orm.annotation.Entity;
 import scw.orm.annotation.PrimaryKey;
 
@@ -51,5 +52,10 @@ public class Order extends PostOrderRequest {
 
 	public void setCreateTime(Long createTime) {
 		this.createTime = createTime;
+	}
+	
+	@Override
+	public String toString() {
+		return MapperUtils.toString(this);
 	}
 }

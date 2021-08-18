@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
+import scw.mapper.MapperUtils;
 import scw.orm.annotation.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -37,5 +38,10 @@ public class Location implements Serializable {
 
 	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
+	}
+	
+	@Override
+	public String toString() {
+		return MapperUtils.toString(this);
 	}
 }

@@ -2,6 +2,7 @@ package io.github.wcnnkh.taxi.core.dto;
 
 import java.io.Serializable;
 
+import scw.mapper.MapperUtils;
 import scw.orm.annotation.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -28,5 +29,10 @@ public class GrabOrderRequest implements Serializable {
 
 	public void setTaxiId(String taxiId) {
 		this.taxiId = taxiId;
+	}
+	
+	@Override
+	public String toString() {
+		return MapperUtils.toString(this);
 	}
 }

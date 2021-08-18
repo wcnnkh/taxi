@@ -21,7 +21,7 @@ import io.github.wcnnkh.taxi.core.dto.TraceLocation;
 import io.github.wcnnkh.taxi.core.service.PassengerService;
 import scw.context.annotation.Provider;
 import scw.core.Ordered;
-import scw.lucene.DefaultLuceneTemplete;
+import scw.lucene.DefaultLuceneTemplate;
 import scw.lucene.LuceneTemplate;
 import scw.lucene.ScoreDocMapper;
 import scw.lucene.SearchParameters;
@@ -29,7 +29,7 @@ import scw.validation.FastValidator;
 
 @Provider(order = Ordered.LOWEST_PRECEDENCE)
 public class LucenePassengerService implements PassengerService{
-	private final LuceneTemplate luceneTemplate = new DefaultLuceneTemplete("passenger");
+	private final LuceneTemplate luceneTemplate = new DefaultLuceneTemplate("passenger");
 	private SpatialContext spatialContext = SpatialContext.GEO;
 	private SpatialStrategy strategy;
 	
