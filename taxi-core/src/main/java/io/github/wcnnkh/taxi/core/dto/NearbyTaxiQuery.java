@@ -21,10 +21,10 @@ public class NearbyTaxiQuery implements Serializable {
 	@Schema(description = "查询的范围，单位：千米", required = true, defaultValue = "5")
 	@NotNull
 	private Double distance = 5D;
-	@Schema(description = "返回的最大数量", required = true, defaultValue = "10")
-	@Min(10)
+	@Schema(description = "返回的最大数量", required = true, defaultValue = "50")
+	@Min(1)
 	@NotNull
-	private int count = 10;
+	private Integer count = 50;
 
 	public Location getLocation() {
 		return location;
@@ -49,15 +49,15 @@ public class NearbyTaxiQuery implements Serializable {
 	public void setDistance(Double distance) {
 		this.distance = distance;
 	}
-
-	public int getCount() {
+	
+	public Integer getCount() {
 		return count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(Integer count) {
 		this.count = count;
 	}
-	
+
 	@Override
 	public String toString() {
 		return MapperUtils.toString(this);

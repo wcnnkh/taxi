@@ -27,7 +27,6 @@
 		<br/>
 		<h5 id="message-log"></h5>
 		<br/>
-		<h5 id="nearby-taxi-log"></h5>
 	</body>
 	<script>
 		function createWebsocket(passengerId) {
@@ -54,6 +53,14 @@
 							layer.open({
 							  title: '接单成功提示',
 							  content: "你的订单" + order.id + "已被司机" + order.taxiId + "确认接单"
+							});
+						}
+						
+						if(order.status == "400"){
+							//无供
+							layer.open({
+							  title: '下单失败提示',
+							  content: "抱歉，你的订单" + order.id + "无人接单!"
 							});
 						}
 					}

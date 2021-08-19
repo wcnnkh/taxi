@@ -16,6 +16,43 @@ function initMap(passengerId, websocket) {
 		map.addControl(new AMap.Geolocation());
 	});
 
+	var markers = new Array();
+	websocket.onmessage = function(event) {
+		console.log(event);
+		$("#message-log").html(new Date() + ":<br/>" + event.data);
+		var heartbeat = JSON.parse(event.data);
+		if (heartbeat.type == "ORDER") {
+			var order = heartbeat.message;
+			if (order.status == "200") {
+				//司机已确认接单
+				layer.open({
+					title: '接单成功提示',
+					content: "你的订单" + order.id + "已被司机" + order.taxiId + "确认接单"
+				});
+			}
+
+			if (order.status == "400") {
+				//无供
+				layer.open({
+					title: '下单失败提示',
+					content: "抱歉，你的订单" + order.id + "无人接单!"
+				});
+			}
+		}else if(heartbeat.type = "NEARBY_TAXI"){
+			//附近车辆信息
+			var taxis = heartbeat.message;
+			var newMarkers = new Array();
+			taxis.forEach((taxi) => {
+				var marker = toTaxiMarker(taxi);
+				newMarkers.push(marker);
+				map.add(marker);
+			})
+			//清除旧的点
+			map.remove(markers);
+			markers = newMarkers;
+		}
+	}
+
 	AMap.plugin('AMap.Geolocation', function() {
 		var geolocation = new AMap.Geolocation({
 			// 是否使用高精度定位，默认：true
@@ -44,59 +81,9 @@ function initMap(passengerId, websocket) {
 		});
 		map.add(selfMarker);
 
-		var markers = new Array();
-		//清除所有的点 
-		function clearMarkers() {
-			markers.forEach((m) => {
-				map.remove(m);
-			})
-			
-		}
-
-		/**
-		 * 刷新附近车辆
-		 * @param {Object} data 当前位置信息
-		 */
-		function refreshNearbyTaxi(data) {
-			$.ajax({
-				method: "POST",
-				url: "../passenger/nearby_taxi",
-				data: JSON.stringify({
-					"taxiStatus": {
-						"working": true
-					},
-					"location": toLocation(data)
-				}),
-				contentType: "application/json;charset=utf-8",
-				dataType: "json",
-				success: function(data) {
-					$("#nearby-taxi-log").html(new Date() + ":<br/>" + JSON.stringify(data));
-					clearMarkers();
-					data.data.forEach((taxi) => {
-						var marker = toMarker(taxi);
-						markers.push(markers);
-						map.add(marker);
-					})
-				}
-			})
-		}
-
-		function toMarker(taxi) {
-			return new AMap.Marker({
-				map: map,
-				offset: new AMap.Pixel(-13, -30),
-				icon: 'img/taxi48.png', // 添加 Icon 图标 URL
-				position: new AMap.LngLat(taxi.location.longitude, taxi.location.latitude),
-				title: '司机[' + taxi.id + ']',
-				taxiId: taxi.id
-			});
-		}
-
 		function onComplete(data) {
 			$("#geo-log").html(new Date() + ":<br/>" + JSON.stringify(data));
-			//这种写法极端情况下会出现标记点混乱的问题(如：上一个还未标记完就被下一次清空了)
-			refreshNearbyTaxi(data);
-
+			
 			// data是具体的定位信息
 			var position = [data.position.lng, data.position.lat];
 			map.setCenter(position);
@@ -126,7 +113,7 @@ function initMap(passengerId, websocket) {
 		}
 
 		$("button.post-order").click(function() {
-			try{
+			try {
 				geolocation.getCurrentPosition(function(status, result) {
 					if (status == "error") {
 						layer.msg("下单失败，无法获取位置信息[" + result.message + "]");
@@ -148,12 +135,12 @@ function initMap(passengerId, websocket) {
 								content: "订单号：" + data.data.id
 							});
 						},
-						error: function(error){
+						error: function(error) {
 							layer.msg("下单失[" + error + "]");
 						}
 					})
 				})
-			}catch(e){
+			} catch (e) {
 				layer.msg("代码错误：" + e);
 			}
 		})

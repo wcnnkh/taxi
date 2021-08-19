@@ -80,8 +80,8 @@ public class LuceneTaxiService implements TaxiService {
 		SearchParameters parameters = new SearchParameters(luceneQuery, query.getCount());
 		SearchResults<Taxi> results = luceneTemplate.search(parameters, mapper);
 		return results.streamAll().filter((taxi) -> {
-			//超过60秒未上传心跳就忽略
-			if(System.currentTimeMillis() - taxi.getLocation().getTime() > 60000L){
+			//超过30秒未上传心跳就忽略
+			if(System.currentTimeMillis() - taxi.getLocation().getTime() > 30000L){
 				return false;
 			}
 			return true;

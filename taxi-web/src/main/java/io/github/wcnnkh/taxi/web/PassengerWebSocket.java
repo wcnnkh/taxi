@@ -1,6 +1,9 @@
 package io.github.wcnnkh.taxi.web;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.websocket.CloseReason;
 import javax.websocket.CloseReason.CloseCodes;
@@ -12,10 +15,14 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import io.github.wcnnkh.taxi.core.dto.NearbyTaxiQuery;
+import io.github.wcnnkh.taxi.core.dto.Taxi;
+import io.github.wcnnkh.taxi.core.dto.TaxiStatus;
 import io.github.wcnnkh.taxi.core.dto.Trace;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEvent;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
 import io.github.wcnnkh.taxi.core.service.PassengerService;
+import io.github.wcnnkh.taxi.core.service.TaxiService;
 import scw.core.utils.StringUtils;
 import scw.event.EventListener;
 import scw.json.JSONUtils;
@@ -29,11 +36,14 @@ public class PassengerWebSocket implements EventListener<OrderStatusEvent> {
 	private static Logger logger = LoggerFactory.getLogger(PassengerWebSocket.class);
 	private static SafeStandardSessionManager<String> sessionManager = new SafeStandardSessionManager<>("passenger");
 	private final PassengerService passengerService;
+	private final TaxiService taxiService;
+	private final Executor pushExecutor = Executors.newWorkStealingPool();
 
-	public PassengerWebSocket(PassengerService passengerService,
-			OrderStatusEventDispatcher orderStatusEventDispatcher) {
+	public PassengerWebSocket(PassengerService passengerService, OrderStatusEventDispatcher orderStatusEventDispatcher,
+			TaxiService taxiService) {
 		this.passengerService = passengerService;
 		orderStatusEventDispatcher.registerListener(this);
+		this.taxiService = taxiService;
 	}
 
 	@Override
@@ -41,7 +51,7 @@ public class PassengerWebSocket implements EventListener<OrderStatusEvent> {
 		if (StringUtils.isNotEmpty(event.getOrder().getPassengerId())) {
 			sessionManager.getSessions(event.getOrder().getPassengerId()).stream().forEach((session) -> {
 				String message = HeartbeatType.ORDER.wrap(event.getOrder()).toString();
-				if(logger.isTraceEnabled()) {
+				if (logger.isTraceEnabled()) {
 					logger.trace("向乘客[{}]推送消息：{}", event.getOrder().getPassengerId(), message);
 				}
 				try {
@@ -61,7 +71,7 @@ public class PassengerWebSocket implements EventListener<OrderStatusEvent> {
 			try {
 				s.close(closeReason);
 			} catch (IOException e) {
-				//ignore
+				// ignore
 			}
 		});
 		sessionManager.register(passengerId, session);
@@ -79,16 +89,39 @@ public class PassengerWebSocket implements EventListener<OrderStatusEvent> {
 	}
 
 	@OnMessage
-	public void onMessage(String message) {
-		//TODO 此处的乘客id应该从连接中获取 ，taxi同理
-		if(logger.isTraceEnabled()) {
+	public void onMessage(Session session, String message) {
+		// TODO 此处的乘客id应该从连接中获取 ，taxi同理
+		if (logger.isTraceEnabled()) {
 			logger.trace("On message: {}", message);
 		}
-		
+
 		Trace trace = JSONUtils.getJsonSupport().parseObject(message, Trace.class);
 		if (trace == null) {
 			return;
 		}
+		
 		passengerService.report(trace);
+		pushExecutor.execute(() -> {
+			if(!session.isOpen()) {
+				return ;
+			}
+			NearbyTaxiQuery nearbyTaxiQuery = new NearbyTaxiQuery();
+			nearbyTaxiQuery.setLocation(trace.getLocation());
+			TaxiStatus taxiStatus = new TaxiStatus();
+			taxiStatus.setWorking(true);
+			nearbyTaxiQuery.setTaxiStatus(taxiStatus);
+			List<Taxi> taxis = taxiService.getNearbyTaxis(nearbyTaxiQuery);
+			String pushMessage = HeartbeatType.NEARBY_TAXI.wrap(taxis).toString();
+			if(!session.isOpen()) {
+				return ;
+			}
+			synchronized (session) {
+				try {
+					session.getBasicRemote().sendText(pushMessage);
+				} catch (IOException e) {
+					logger.error(e, "push message error: {}", pushMessage);
+				}
+			}
+		});
 	}
 }
