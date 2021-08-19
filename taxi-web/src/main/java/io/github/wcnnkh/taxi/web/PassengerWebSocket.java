@@ -42,7 +42,7 @@ public class PassengerWebSocket implements EventListener<OrderStatusEvent> {
 			sessionManager.getSessions(event.getOrder().getPassengerId()).stream().forEach((session) -> {
 				String message = HeartbeatType.ORDER.wrap(event.getOrder()).toString();
 				if(logger.isTraceEnabled()) {
-					logger.trace("向乘客[{}]推荐消息：{}", event.getOrder().getPassengerId(), message);
+					logger.trace("向乘客[{}]推送消息：{}", event.getOrder().getPassengerId(), message);
 				}
 				try {
 					session.getBasicRemote().sendText(message);
@@ -57,6 +57,7 @@ public class PassengerWebSocket implements EventListener<OrderStatusEvent> {
 	public void onOpen(Session session, @PathParam("passengerId") String passengerId) {
 		CloseReason closeReason = new CloseReason(CloseCodes.NORMAL_CLOSURE, "关闭重复的连接");
 		sessionManager.remove(passengerId).forEach((s) -> {
+			logger.info("关闭重复连接:" + s.getId());
 			try {
 				s.close(closeReason);
 			} catch (IOException e) {

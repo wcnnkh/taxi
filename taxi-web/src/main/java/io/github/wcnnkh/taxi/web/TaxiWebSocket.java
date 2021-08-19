@@ -42,7 +42,7 @@ public class TaxiWebSocket implements EventListener<OrderStatusEvent> {
 					.forEach((session) -> {
 						String message = HeartbeatType.ORDER.wrap(event.getOrder()).toString();
 						if (logger.isDebugEnabled()) {
-							logger.debug("向车辆[{}]推荐消息：{}", event.getOrder().getTaxiId(), message);
+							logger.debug("向车辆[{}]推送消息：{}", event.getOrder().getTaxiId(), message);
 						}
 						try {
 							session.getBasicRemote().sendText(message);
@@ -57,6 +57,7 @@ public class TaxiWebSocket implements EventListener<OrderStatusEvent> {
 	public void onOpen(Session session, @PathParam("taxiId") String taxiId) throws IOException {
 		CloseReason closeReason = new CloseReason(CloseCodes.NORMAL_CLOSURE, "关闭重复的连接");
 		sessionManager.remove(taxiId).forEach((s) -> {
+			logger.info("关闭重复连接:" + s.getId());
 			try {
 				s.close(closeReason);
 			} catch (IOException e) {
