@@ -3,6 +3,7 @@ package io.github.wcnnkh.taxi.core.service.impl;
 import io.github.wcnnkh.taxi.core.dto.GrabOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.dto.PostOrderRequest;
+import io.github.wcnnkh.taxi.core.dto.UpdateOrderStatusRequest;
 import io.github.wcnnkh.taxi.core.enums.OrderStatus;
 import io.github.wcnnkh.taxi.core.event.ConfirmTimeoutEventDispatcher;
 import io.github.wcnnkh.taxi.core.event.DispatchEventDispatcher;
@@ -77,7 +78,12 @@ public class DispatchServiceImpl implements DispatchService {
 		if (order == null) {
 			return false;
 		}
-		if (orderService.updateStatus(request, OrderStatus.CONFIRM)) {
+		
+		UpdateOrderStatusRequest updateStatusRequest = new UpdateOrderStatusRequest();
+		updateStatusRequest.setOrderId(request.getOrderId());
+		updateStatusRequest.setTaxiId(request.getTaxiId());
+		updateStatusRequest.setStatus(OrderStatus.CONFIRM);
+		if (orderService.updateStatus(updateStatusRequest)) {
 			Order newOrder = new Order();
 			Copy.copy(newOrder, order);
 			newOrder.setStatus(OrderStatus.CONFIRM.getCode());

@@ -1,8 +1,8 @@
 package io.github.wcnnkh.taxi.simple;
 
-import io.github.wcnnkh.taxi.core.dto.GrabOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.dto.PostOrderRequest;
+import io.github.wcnnkh.taxi.core.dto.UpdateOrderStatusRequest;
 import io.github.wcnnkh.taxi.core.enums.OrderStatus;
 import io.github.wcnnkh.taxi.core.service.OrderService;
 import scw.context.annotation.Provider;
@@ -34,8 +34,9 @@ public class SimpleOrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public boolean updateStatus(GrabOrderRequest request, OrderStatus status) {
+	public boolean updateStatus(UpdateOrderStatusRequest request) {
 		Sql sql = null;
+		OrderStatus status = request.getStatus();
 		if (status == OrderStatus.PRE_CONFIRM) {
 			// 预绑定
 			sql = new SimpleSql("update `order` set status=?, taxiId = ? where id = ? and status=?",

@@ -1,9 +1,8 @@
 package io.github.wcnnkh.taxi.core.service;
 
-import io.github.wcnnkh.taxi.core.dto.GrabOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.dto.PostOrderRequest;
-import io.github.wcnnkh.taxi.core.enums.OrderStatus;
+import io.github.wcnnkh.taxi.core.dto.UpdateOrderStatusRequest;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
 import scw.util.page.Page;
 
@@ -24,7 +23,7 @@ public interface OrderService {
 	 * @param status
 	 * @return
 	 */
-	boolean updateStatus(GrabOrderRequest request, OrderStatus status);
+	boolean updateStatus(UpdateOrderStatusRequest request);
 	
 	Page<Order> getPassengerOrders(String passengerId, long pageNumber, long limit);
 	

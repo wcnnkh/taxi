@@ -5,6 +5,8 @@ public enum OrderStatus {
 	PRE_CONFIRM("100", "预确认接口"),
 	CONFIRM_TIMEOUT("110", "确认超时"),
 	CONFIRM("200", "确认接单"),
+	RECEIVE_PASSENGER("210", "接到乘客"),
+	ARRIVE("220", "到达目的地"),
 	NO_SUPPLY("400", "无供");
 
 	private final String code;

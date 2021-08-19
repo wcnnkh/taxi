@@ -1,15 +1,11 @@
 package io.github.wcnnkh.taxi.core.event.listener;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import io.github.wcnnkh.taxi.core.dto.GrabOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.Location;
 import io.github.wcnnkh.taxi.core.dto.NearbyTaxiQuery;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.dto.Taxi;
 import io.github.wcnnkh.taxi.core.dto.TaxiStatus;
+import io.github.wcnnkh.taxi.core.dto.UpdateOrderStatusRequest;
 import io.github.wcnnkh.taxi.core.enums.OrderStatus;
 import io.github.wcnnkh.taxi.core.event.DispatchEventDispatcher;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEvent;
@@ -17,6 +13,11 @@ import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
 import io.github.wcnnkh.taxi.core.service.DispatchPolicyService;
 import io.github.wcnnkh.taxi.core.service.OrderService;
 import io.github.wcnnkh.taxi.core.service.TaxiService;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 import scw.core.utils.StringUtils;
 import scw.event.EventListener;
 import scw.event.ObjectEvent;
@@ -75,7 +76,7 @@ public class DispatchEventListener implements EventListener<ObjectEvent<Order>> 
 			if(logger.isTraceEnabled()) {
 				logger.trace("推送给司机[{}]进行抢单:{}", taxi.getId(), dispathOrder.getId());
 			}
-			
+		
 			Order order = new Order();
 			Copy.copy(order, dispathOrder);
 			order.setTaxiId(taxi.getId());
@@ -100,9 +101,10 @@ public class DispatchEventListener implements EventListener<ObjectEvent<Order>> 
 
 		if (dispatchPolicyService.isTimeout(dispatchOrder)) {
 			// 超时
-			GrabOrderRequest request = new GrabOrderRequest();
+			UpdateOrderStatusRequest request = new UpdateOrderStatusRequest();
 			request.setOrderId(dispatchOrder.getId());
-			if (orderService.updateStatus(request, OrderStatus.NO_SUPPLY)) {
+			request.setStatus(OrderStatus.NO_SUPPLY);
+			if (orderService.updateStatus(request)) {
 				Order newOrder = new Order();
 				Copy.copy(newOrder, dispatchOrder);
 				newOrder.setStatus(OrderStatus.NO_SUPPLY.getCode());

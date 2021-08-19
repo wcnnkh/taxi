@@ -1,8 +1,7 @@
 package io.github.wcnnkh.taxi.core.event.listener;
 
-import java.util.concurrent.TimeUnit;
-
 import io.github.wcnnkh.taxi.core.dto.Order;
+import io.github.wcnnkh.taxi.core.dto.UpdateOrderStatusRequest;
 import io.github.wcnnkh.taxi.core.enums.OrderStatus;
 import io.github.wcnnkh.taxi.core.event.ConfirmTimeoutEventDispatcher;
 import io.github.wcnnkh.taxi.core.event.GrabOrderEvent;
@@ -11,6 +10,9 @@ import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
 import io.github.wcnnkh.taxi.core.service.DispatchPolicyService;
 import io.github.wcnnkh.taxi.core.service.OrderService;
 import io.github.wcnnkh.taxi.core.service.impl.DispatchServiceImpl;
+
+import java.util.concurrent.TimeUnit;
+
 import scw.event.EventListener;
 import scw.logger.Logger;
 import scw.logger.LoggerFactory;
@@ -49,7 +51,11 @@ public class GrabOrderEventListener implements EventListener<GrabOrderEvent> {
 			return;
 		}
 
-		if (orderService.updateStatus(event.getGrabOrderRequest(), OrderStatus.PRE_CONFIRM)) {
+		UpdateOrderStatusRequest request = new UpdateOrderStatusRequest();
+		request.setOrderId(event.getGrabOrderRequest().getOrderId());
+		request.setTaxiId(event.getGrabOrderRequest().getTaxiId());
+		request.setStatus(OrderStatus.PRE_CONFIRM);
+		if (orderService.updateStatus(request)) {
 			if(logger.isDebugEnabled()) {
 				logger.debug("预确认司机：" + event);
 			}

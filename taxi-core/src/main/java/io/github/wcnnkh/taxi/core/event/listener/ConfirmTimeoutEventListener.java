@@ -1,5 +1,6 @@
 package io.github.wcnnkh.taxi.core.event.listener;
 
+import io.github.wcnnkh.taxi.core.dto.UpdateOrderStatusRequest;
 import io.github.wcnnkh.taxi.core.enums.OrderStatus;
 import io.github.wcnnkh.taxi.core.event.GrabOrderEvent;
 import io.github.wcnnkh.taxi.core.service.OrderService;
@@ -18,7 +19,9 @@ public class ConfirmTimeoutEventListener implements EventListener<GrabOrderEvent
 	
 	@Override
 	public void onEvent(GrabOrderEvent event) {
-		if(orderService.updateStatus(event.getGrabOrderRequest(), OrderStatus.NO_SUPPLY)){
+		UpdateOrderStatusRequest request = new UpdateOrderStatusRequest(event.getGrabOrderRequest().getOrderId(), OrderStatus.CONFIRM_TIMEOUT);
+		request.setTaxiId(event.getGrabOrderRequest().getTaxiId());
+		if(orderService.updateStatus(request)){
 			logger.info("司机确认接单超时：{}", event);
 		}
 	}
