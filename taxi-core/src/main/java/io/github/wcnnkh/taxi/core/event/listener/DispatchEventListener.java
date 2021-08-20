@@ -108,11 +108,7 @@ public class DispatchEventListener implements EventListener<ObjectEvent<Order>> 
 				Order newOrder = new Order();
 				Copy.copy(newOrder, dispatchOrder);
 				newOrder.setStatus(OrderStatus.NO_SUPPLY.getCode());
-				
-				if(logger.isInfoEnabled()) {
-					logger.info("发送无供事件:{}", dispatchOrder.getId());
-				}
-
+				logger.info("发送无供事件:{}", dispatchOrder.getId());
 				orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(dispatchOrder, newOrder));
 			}
 			return ;

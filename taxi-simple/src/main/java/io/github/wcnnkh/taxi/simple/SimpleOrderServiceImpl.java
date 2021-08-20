@@ -51,7 +51,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 					OrderStatus.CONFIRM.getCode(), request.getOrderId(), request.getTaxiId(),
 					OrderStatus.PRE_CONFIRM.getCode());
 		} else if (status == OrderStatus.NO_SUPPLY) {
-			sql = new SimpleSql("update `order` set status=? where id = ? and status=? and taxi is null",
+			sql = new SimpleSql("update `order` set status=? where id = ? and status=? and taxiId is null",
 					OrderStatus.NO_SUPPLY.getCode(), request.getOrderId(), OrderStatus.RECORD.getCode());
 		} else if (status == OrderStatus.RECEIVE_PASSENGER) {
 			sql = new SimpleSql("update `order` set status=? where id = ? and status=?",

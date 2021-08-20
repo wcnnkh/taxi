@@ -1,5 +1,6 @@
 package io.github.wcnnkh.taxi.web;
 
+import javax.validation.Valid;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,7 +31,7 @@ public class TaxiController {
 	@Operation(description = "车辆抢单")
 	@POST
 	@Path("/grab_order")
-	public Result grabOrder(@RequestBody TaxiOrderRequest request) {
+	public Result grabOrder(@RequestBody @Valid TaxiOrderRequest request) {
 		dispatchService.grabOrder(request);
 		return resultFactory.success();
 	}
@@ -38,7 +39,7 @@ public class TaxiController {
 	@Operation(description = "确认接单")
 	@POST
 	@Path("confirm_order")
-	public Result confirm_order(@RequestBody TaxiOrderRequest request) {
+	public Result confirm_order(@RequestBody @Valid TaxiOrderRequest request) {
 		boolean success = dispatchService.confirmOrder(request);
 		if(success) {
 			return resultFactory.success();
@@ -50,5 +51,25 @@ public class TaxiController {
 	@Path("/orders")
 	public DataResult<Page<Order>> getOrders(String taxiId, long pageNumber, long limit){
 		return resultFactory.success(orderService.getTaxiOrders(taxiId, pageNumber, limit));
+	}
+
+	@POST
+	@Path("/arrive")
+	public Result arrive(@RequestBody @Valid TaxiOrderRequest request) {
+		boolean success = dispatchService.arrive(request);
+		if(success) {
+			return resultFactory.success();
+		}
+		return resultFactory.error();
+	}
+
+	@POST
+	@Path("/receive_passenger")
+	public Result receivePassenger(@RequestBody @Valid  TaxiOrderRequest request) {
+		boolean success = dispatchService.receivePassenger(request);
+		if(success) {
+			return resultFactory.success();
+		}
+		return resultFactory.error();
 	}
 }
