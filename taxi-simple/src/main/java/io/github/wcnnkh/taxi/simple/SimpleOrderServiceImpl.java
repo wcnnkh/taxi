@@ -27,7 +27,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 		db.createTable(tableStructure);
 		db.getMapper().register(Order.class, new TableStructureMapProcessor<>(tableStructure));
 	}
-	
+
 	@Override
 	public Order getOrder(String orderId) {
 		return db.getById(Order.class, orderId);
@@ -40,7 +40,8 @@ public class SimpleOrderServiceImpl implements OrderService {
 		if (status == OrderStatus.PRE_CONFIRM) {
 			// 预绑定
 			sql = new SimpleSql("update `order` set status=?, taxiId = ? where id = ? and status=?",
-					OrderStatus.PRE_CONFIRM.getCode(), request.getTaxiId(), request.getOrderId(), OrderStatus.RECORD.getCode());
+					OrderStatus.PRE_CONFIRM.getCode(), request.getTaxiId(), request.getOrderId(),
+					OrderStatus.RECORD.getCode());
 		} else if (status == OrderStatus.CONFIRM_TIMEOUT) {
 			sql = new SimpleSql("update `order` set status=? where id = ? and taxiId=? and status=?",
 					OrderStatus.CONFIRM_TIMEOUT.getCode(), request.getOrderId(), request.getTaxiId(),
@@ -50,8 +51,14 @@ public class SimpleOrderServiceImpl implements OrderService {
 					OrderStatus.CONFIRM.getCode(), request.getOrderId(), request.getTaxiId(),
 					OrderStatus.PRE_CONFIRM.getCode());
 		} else if (status == OrderStatus.NO_SUPPLY) {
-			sql = new SimpleSql("update `order` set status=? where id = ? and status=?",
+			sql = new SimpleSql("update `order` set status=? where id = ? and status=? and taxi is null",
 					OrderStatus.NO_SUPPLY.getCode(), request.getOrderId(), OrderStatus.RECORD.getCode());
+		} else if (status == OrderStatus.RECEIVE_PASSENGER) {
+			sql = new SimpleSql("update `order` set status=? where id = ? and status=?",
+					OrderStatus.RECEIVE_PASSENGER.getCode(), request.getOrderId(), OrderStatus.CONFIRM.getCode());
+		} else if (status == OrderStatus.ARRIVE) {
+			sql = new SimpleSql("update `order` set status=? where id = ? and status=?", OrderStatus.ARRIVE.getCode(),
+					request.getOrderId(), OrderStatus.RECEIVE_PASSENGER.getCode());
 		}
 
 		if (sql == null) {
@@ -73,8 +80,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Page<Order> getPassengerOrders(String passengerId, long pageNumber,
-			long limit) {
+	public Page<Order> getPassengerOrders(String passengerId, long pageNumber, long limit) {
 		Sql sql = new SimpleSql("select * from `order` where passengerId=? order createTime desc", passengerId);
 		return db.getPage(Order.class, sql, pageNumber, limit);
 	}
@@ -83,5 +89,18 @@ public class SimpleOrderServiceImpl implements OrderService {
 	public Page<Order> getTaxiOrders(String taxiId, long pageNumber, long limit) {
 		Sql sql = new SimpleSql("select * from `order` where taxiId=? order createTime desc", taxiId);
 		return db.getPage(Order.class, sql, pageNumber, limit);
+	}
+
+	@Override
+	public Order getTaxiOrdersInProgress(String taxiId) {
+		Sql sql = new SimpleSql("select * from `order` where taxiId=? order createTime desc limit 0,1", taxiId);
+		return db.query(Order.class, sql).first();
+	}
+
+	@Override
+	public Order getPassengerOrdersInProgress(String passengerId) {
+		Sql sql = new SimpleSql("select * from `order` where passengerId=? order createTime desc limit 0,1",
+				passengerId);
+		return db.query(Order.class, sql).first();
 	}
 }

@@ -1,17 +1,17 @@
 package io.github.wcnnkh.taxi.core.event;
 
-import io.github.wcnnkh.taxi.core.dto.GrabOrderRequest;
+import io.github.wcnnkh.taxi.core.dto.TaxiOrderRequest;
 import scw.event.BasicEvent;
 
 public class GrabOrderEvent extends BasicEvent {
 	private static final long serialVersionUID = 1L;
-	private final GrabOrderRequest grabOrderRequest;
+	private final TaxiOrderRequest grabOrderRequest;
 
-	public GrabOrderEvent(GrabOrderRequest grabOrderRequest) {
+	public GrabOrderEvent(TaxiOrderRequest grabOrderRequest) {
 		this.grabOrderRequest = grabOrderRequest;
 	}
 
-	public GrabOrderRequest getGrabOrderRequest() {
+	public TaxiOrderRequest getGrabOrderRequest() {
 		return grabOrderRequest;
 	}
 }

@@ -1,6 +1,6 @@
 package io.github.wcnnkh.taxi.core.service.impl;
 
-import io.github.wcnnkh.taxi.core.dto.GrabOrderRequest;
+import io.github.wcnnkh.taxi.core.dto.TaxiOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.dto.PostOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.UpdateOrderStatusRequest;
@@ -68,17 +68,17 @@ public class DispatchServiceImpl implements DispatchService {
 	}
 
 	@Override
-	public void grabOrder(GrabOrderRequest request) {
+	public void grabOrder(TaxiOrderRequest request) {
 		grabOrderEventDispatcher.publishEvent(new GrabOrderEvent(request));
 	}
 
 	@Override
-	public boolean confirmOrder(GrabOrderRequest request) {
+	public boolean confirmOrder(TaxiOrderRequest request) {
 		Order order = orderService.getOrder(request.getOrderId());
 		if (order == null) {
 			return false;
 		}
-		
+
 		UpdateOrderStatusRequest updateStatusRequest = new UpdateOrderStatusRequest();
 		updateStatusRequest.setOrderId(request.getOrderId());
 		updateStatusRequest.setTaxiId(request.getTaxiId());
@@ -91,5 +91,45 @@ public class DispatchServiceImpl implements DispatchService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean receivePassenger(TaxiOrderRequest request) {
+		Order order = orderService.getOrder(request.getOrderId());
+		if (order == null) {
+			return false;
+		}
+
+		UpdateOrderStatusRequest updateOrderStatusRequest = new UpdateOrderStatusRequest();
+		updateOrderStatusRequest.setOrderId(request.getOrderId());
+		updateOrderStatusRequest.setTaxiId(request.getTaxiId());
+		updateOrderStatusRequest.setStatus(OrderStatus.RECEIVE_PASSENGER);
+		boolean success = orderService.updateStatus(updateOrderStatusRequest);
+		if (success) {
+			Order newOrder = Copy.clone(order);
+			newOrder.setStatus(OrderStatus.RECEIVE_PASSENGER.getCode());
+			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order, newOrder));
+		}
+		return success;
+	}
+
+	@Override
+	public boolean arrive(TaxiOrderRequest request) {
+		Order order = orderService.getOrder(request.getOrderId());
+		if (order == null) {
+			return false;
+		}
+
+		UpdateOrderStatusRequest updateOrderStatusRequest = new UpdateOrderStatusRequest();
+		updateOrderStatusRequest.setOrderId(request.getOrderId());
+		updateOrderStatusRequest.setTaxiId(request.getTaxiId());
+		updateOrderStatusRequest.setStatus(OrderStatus.ARRIVE);
+		boolean success = orderService.updateStatus(updateOrderStatusRequest);
+		if (success) {
+			Order newOrder = Copy.clone(order);
+			newOrder.setStatus(OrderStatus.ARRIVE.getCode());
+			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order, newOrder));
+		}
+		return success;
 	}
 }

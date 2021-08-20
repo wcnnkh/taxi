@@ -4,7 +4,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-import io.github.wcnnkh.taxi.core.dto.GrabOrderRequest;
+import io.github.wcnnkh.taxi.core.dto.TaxiOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.service.DispatchService;
 import io.github.wcnnkh.taxi.core.service.OrderService;
@@ -30,7 +30,7 @@ public class TaxiController {
 	@Operation(description = "车辆抢单")
 	@POST
 	@Path("/grab_order")
-	public Result grabOrder(@RequestBody GrabOrderRequest request) {
+	public Result grabOrder(@RequestBody TaxiOrderRequest request) {
 		dispatchService.grabOrder(request);
 		return resultFactory.success();
 	}
@@ -38,7 +38,7 @@ public class TaxiController {
 	@Operation(description = "确认接单")
 	@POST
 	@Path("confirm_order")
-	public Result confirm_order(@RequestBody GrabOrderRequest request) {
+	public Result confirm_order(@RequestBody TaxiOrderRequest request) {
 		boolean success = dispatchService.confirmOrder(request);
 		if(success) {
 			return resultFactory.success();
