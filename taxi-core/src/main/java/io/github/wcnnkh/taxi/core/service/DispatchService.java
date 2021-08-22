@@ -1,5 +1,6 @@
 package io.github.wcnnkh.taxi.core.service;
 
+import io.github.wcnnkh.taxi.core.dto.PassengerOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.TaxiOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.dto.PostOrderRequest;
@@ -43,4 +44,18 @@ public interface DispatchService {
 	 * @return
 	 */
 	boolean arrive(TaxiOrderRequest request);
+	
+	/**
+	 * 司机取消
+	 * @param request
+	 * @return
+	 */
+	boolean cancel(TaxiOrderRequest request);
+	
+	/**
+	 * 乘客取消
+	 * @param request
+	 * @return
+	 */
+	boolean cancel(PassengerOrderRequest request);
 }

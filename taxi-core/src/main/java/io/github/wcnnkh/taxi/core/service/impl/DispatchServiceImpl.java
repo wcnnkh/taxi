@@ -1,10 +1,12 @@
 package io.github.wcnnkh.taxi.core.service.impl;
 
-import io.github.wcnnkh.taxi.core.dto.TaxiOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.Order;
+import io.github.wcnnkh.taxi.core.dto.PassengerOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.PostOrderRequest;
+import io.github.wcnnkh.taxi.core.dto.TaxiOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.UpdateOrderStatusRequest;
 import io.github.wcnnkh.taxi.core.enums.OrderStatus;
+import io.github.wcnnkh.taxi.core.event.AgainDispatchEventDispatcher;
 import io.github.wcnnkh.taxi.core.event.ConfirmTimeoutEventDispatcher;
 import io.github.wcnnkh.taxi.core.event.DispatchEventDispatcher;
 import io.github.wcnnkh.taxi.core.event.GrabOrderEvent;
@@ -31,19 +33,27 @@ public class DispatchServiceImpl implements DispatchService {
 	private final OrderService orderService;
 	private final DispatchEventDispatcher dispatchEventDispatcher;
 
-	public DispatchServiceImpl(OrderStatusEventDispatcher orderStatusEventDispatcher,
-			DispatchEventDispatcher dispatchEventDispatcher, GrabOrderEventDispatcher grabOrderEventDispatcher,
+	public DispatchServiceImpl(
+			OrderStatusEventDispatcher orderStatusEventDispatcher,
+			DispatchEventDispatcher dispatchEventDispatcher,
+			GrabOrderEventDispatcher grabOrderEventDispatcher,
 			OrderService orderService, TaxiService taxiService,
-			ConfirmTimeoutEventDispatcher confirmTimeoutEventDispatcher, DispatchPolicyService dispatchPolicyService) {
+			ConfirmTimeoutEventDispatcher confirmTimeoutEventDispatcher,
+			DispatchPolicyService dispatchPolicyService,
+			AgainDispatchEventDispatcher againDispatchEventDispatcher) {
 		this.orderStatusEventDispatcher = orderStatusEventDispatcher;
 		this.grabOrderEventDispatcher = grabOrderEventDispatcher;
 		this.orderService = orderService;
 		this.dispatchEventDispatcher = dispatchEventDispatcher;
-		grabOrderEventDispatcher.registerListener(new GrabOrderEventListener(orderService, orderStatusEventDispatcher,
+		grabOrderEventDispatcher.registerListener(new GrabOrderEventListener(
+				orderService, orderStatusEventDispatcher,
 				confirmTimeoutEventDispatcher, dispatchPolicyService));
-		dispatchEventDispatcher.registerListener(new DispatchEventListener(taxiService, orderStatusEventDispatcher,
-				dispatchPolicyService, orderService, dispatchEventDispatcher));
-		confirmTimeoutEventDispatcher.registerListener(new ConfirmTimeoutEventListener(orderService));
+		dispatchEventDispatcher.registerListener(new DispatchEventListener(
+				taxiService, orderStatusEventDispatcher, dispatchPolicyService,
+				orderService, dispatchEventDispatcher));
+		confirmTimeoutEventDispatcher
+				.registerListener(new ConfirmTimeoutEventListener(orderService,
+						againDispatchEventDispatcher, dispatchEventDispatcher));
 	}
 
 	public long getDefaultDispatchTime() {
@@ -61,7 +71,8 @@ public class DispatchServiceImpl implements DispatchService {
 		}
 
 		Order order = orderService.record(request);
-		orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(null, order));
+		orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(null,
+				order));
 		// 录单，开始发送订单通知给司机让司机抢单
 		dispatchEventDispatcher.publishEvent(new ObjectEvent<>(order));
 		return order;
@@ -87,7 +98,8 @@ public class DispatchServiceImpl implements DispatchService {
 			Order newOrder = new Order();
 			Copy.copy(newOrder, order);
 			newOrder.setStatus(OrderStatus.CONFIRM.getCode());
-			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order, newOrder));
+			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order,
+					newOrder));
 			return true;
 		}
 		return false;
@@ -108,7 +120,8 @@ public class DispatchServiceImpl implements DispatchService {
 		if (success) {
 			Order newOrder = Copy.clone(order);
 			newOrder.setStatus(OrderStatus.RECEIVE_PASSENGER.getCode());
-			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order, newOrder));
+			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order,
+					newOrder));
 		}
 		return success;
 	}
@@ -128,7 +141,50 @@ public class DispatchServiceImpl implements DispatchService {
 		if (success) {
 			Order newOrder = Copy.clone(order);
 			newOrder.setStatus(OrderStatus.ARRIVE.getCode());
-			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order, newOrder));
+			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order,
+					newOrder));
+		}
+		return success;
+	}
+
+	@Override
+	public boolean cancel(TaxiOrderRequest request) {
+		Order order = orderService.getOrder(request.getOrderId());
+		if (order == null) {
+			return false;
+		}
+
+		UpdateOrderStatusRequest updateOrderStatusRequest = new UpdateOrderStatusRequest();
+		updateOrderStatusRequest.setOrderId(request.getOrderId());
+		updateOrderStatusRequest.setTaxiId(request.getTaxiId());
+		updateOrderStatusRequest.setStatus(OrderStatus.TAXI_CANCEL);
+		boolean success = orderService.updateStatus(updateOrderStatusRequest);
+		if (success) {
+			Order newOrder = Copy.clone(order);
+			newOrder.setStatus(OrderStatus.TAXI_CANCEL.getCode());
+			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order,
+					newOrder));
+		}
+		return success;
+	}
+
+	@Override
+	public boolean cancel(PassengerOrderRequest request) {
+		Order order = orderService.getOrder(request.getOrderId());
+		if (order == null) {
+			return false;
+		}
+
+		UpdateOrderStatusRequest updateOrderStatusRequest = new UpdateOrderStatusRequest();
+		updateOrderStatusRequest.setOrderId(request.getOrderId());
+		updateOrderStatusRequest.setPassengerId(request.getPassengerId());
+		updateOrderStatusRequest.setStatus(OrderStatus.PASSENGER_CANCEL);
+		boolean success = orderService.updateStatus(updateOrderStatusRequest);
+		if (success) {
+			Order newOrder = Copy.clone(order);
+			newOrder.setStatus(OrderStatus.PASSENGER_CANCEL.getCode());
+			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order,
+					newOrder));
 		}
 		return success;
 	}

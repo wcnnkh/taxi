@@ -7,7 +7,10 @@ public enum OrderStatus {
 	CONFIRM("200", "确认接单"),
 	RECEIVE_PASSENGER("210", "接到乘客"),
 	ARRIVE("220", "到达目的地"),
-	NO_SUPPLY("400", "无供");
+	NO_SUPPLY("400", "无供"),
+	PASSENGER_CANCEL("510", "乘客取消"),
+	TAXI_CANCEL("520", "司机取消"),
+	;
 
 	private final String code;
 	private final String description;

@@ -74,11 +74,7 @@ function initMap(passengerId, websocket) {
 		AMap.event.addListener(geolocation, 'complete', onComplete)
 		AMap.event.addListener(geolocation, 'error', onError)
 
-		var selfMarker = new AMap.Marker({
-			offset: new AMap.Pixel(-10, -10),
-			icon: '//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png', // 添加 Icon 图标 URL
-			title: '乘客[' + passengerId + ']'
-		});
+		var selfMarker = toMyselfMarker(passengerId);
 		map.add(selfMarker);
 
 		function onComplete(data) {

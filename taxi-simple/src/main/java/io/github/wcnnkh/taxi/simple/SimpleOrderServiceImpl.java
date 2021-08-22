@@ -20,12 +20,14 @@ import scw.util.page.Page;
 @Provider(order = Ordered.LOWEST_PRECEDENCE)
 public class SimpleOrderServiceImpl implements OrderService {
 	private final DB db;
-	private final TableStructure tableStructure = StandardTableStructure.wrapper(Order.class);
+	private final TableStructure tableStructure = StandardTableStructure
+			.wrapper(Order.class);
 
 	public SimpleOrderServiceImpl(DB db) {
 		this.db = db;
 		db.createTable(tableStructure);
-		db.getMapper().register(Order.class, new TableStructureMapProcessor<>(tableStructure));
+		db.getMapper().register(Order.class,
+				new TableStructureMapProcessor<>(tableStructure));
 	}
 
 	@Override
@@ -37,28 +39,60 @@ public class SimpleOrderServiceImpl implements OrderService {
 	public boolean updateStatus(UpdateOrderStatusRequest request) {
 		Sql sql = null;
 		OrderStatus status = request.getStatus();
-		if (status == OrderStatus.PRE_CONFIRM) {
+		if (status == OrderStatus.RECORD) {
+			sql = new SimpleSql(
+					"update `order` set status=?, taxiId = null where id = ? and taxiId=? and status=?",
+					OrderStatus.RECORD.getCode(), request.getOrderId(), request
+							.getTaxiId(), OrderStatus.CONFIRM_TIMEOUT.getCode());
+		} else if (status == OrderStatus.PRE_CONFIRM) {
 			// 预绑定
-			sql = new SimpleSql("update `order` set status=?, taxiId = ? where id = ? and status=?",
-					OrderStatus.PRE_CONFIRM.getCode(), request.getTaxiId(), request.getOrderId(),
-					OrderStatus.RECORD.getCode());
+			sql = new SimpleSql(
+					"update `order` set status=?, taxiId = ? where id = ? and status=?",
+					OrderStatus.PRE_CONFIRM.getCode(), request.getTaxiId(),
+					request.getOrderId(), OrderStatus.RECORD.getCode());
 		} else if (status == OrderStatus.CONFIRM_TIMEOUT) {
-			sql = new SimpleSql("update `order` set status=? where id = ? and taxiId=? and status=?",
-					OrderStatus.CONFIRM_TIMEOUT.getCode(), request.getOrderId(), request.getTaxiId(),
+			sql = new SimpleSql(
+					"update `order` set status=? where id = ? and taxiId=? and status=?",
+					OrderStatus.CONFIRM_TIMEOUT.getCode(),
+					request.getOrderId(), request.getTaxiId(),
 					OrderStatus.PRE_CONFIRM.getCode());
 		} else if (status == OrderStatus.CONFIRM) {
-			sql = new SimpleSql("update `order` set  status=? where id = ? and taxiId=? and status=?",
-					OrderStatus.CONFIRM.getCode(), request.getOrderId(), request.getTaxiId(),
-					OrderStatus.PRE_CONFIRM.getCode());
+			sql = new SimpleSql(
+					"update `order` set  status=? where id = ? and taxiId=? and status=?",
+					OrderStatus.CONFIRM.getCode(), request.getOrderId(),
+					request.getTaxiId(), OrderStatus.PRE_CONFIRM.getCode());
 		} else if (status == OrderStatus.NO_SUPPLY) {
-			sql = new SimpleSql("update `order` set status=? where id = ? and status=? and taxiId is null",
-					OrderStatus.NO_SUPPLY.getCode(), request.getOrderId(), OrderStatus.RECORD.getCode());
+			sql = new SimpleSql(
+					"update `order` set status=? where id = ? and status=? and taxiId is null",
+					OrderStatus.NO_SUPPLY.getCode(), request.getOrderId(),
+					OrderStatus.RECORD.getCode());
 		} else if (status == OrderStatus.RECEIVE_PASSENGER) {
-			sql = new SimpleSql("update `order` set status=? where id = ? and status=?",
-					OrderStatus.RECEIVE_PASSENGER.getCode(), request.getOrderId(), OrderStatus.CONFIRM.getCode());
+			sql = new SimpleSql(
+					"update `order` set status=? where id = ? and status=?",
+					OrderStatus.RECEIVE_PASSENGER.getCode(),
+					request.getOrderId(), OrderStatus.CONFIRM.getCode());
 		} else if (status == OrderStatus.ARRIVE) {
-			sql = new SimpleSql("update `order` set status=? where id = ? and status=?", OrderStatus.ARRIVE.getCode(),
-					request.getOrderId(), OrderStatus.RECEIVE_PASSENGER.getCode());
+			sql = new SimpleSql(
+					"update `order` set status=? where id = ? and status=?",
+					OrderStatus.ARRIVE.getCode(), request.getOrderId(),
+					OrderStatus.RECEIVE_PASSENGER.getCode());
+		} else if (status == OrderStatus.PASSENGER_CANCEL) {
+			// 在接到乘客前都可以取消
+			sql = new SimpleSql(
+					"update `order` set status=? where id = ? and passengerId=? status in(?,?,?,?,?)",
+					OrderStatus.PASSENGER_CANCEL.getCode(), request
+							.getOrderId(), request.getPassengerId(),
+					OrderStatus.RECORD.getCode(), OrderStatus.PRE_CONFIRM
+							.getCode(), OrderStatus.CONFIRM_TIMEOUT.getCode(),
+					OrderStatus.CONFIRM.getCode(),
+					OrderStatus.RECEIVE_PASSENGER.getCode());
+		} else if (status == OrderStatus.TAXI_CANCEL) {
+			// 在接到乘客前都可以取消
+			sql = new SimpleSql(
+					"update `order` set status=? where id = ? and taxiId=? status in(?,?)",
+					OrderStatus.TAXI_CANCEL.getCode(), request.getOrderId(),
+					request.getTaxiId(), OrderStatus.CONFIRM.getCode(),
+					OrderStatus.RECEIVE_PASSENGER.getCode());
 		}
 
 		if (sql == null) {
@@ -80,27 +114,39 @@ public class SimpleOrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Page<Order> getPassengerOrders(String passengerId, long pageNumber, long limit) {
-		Sql sql = new SimpleSql("select * from `order` where passengerId=? order createTime desc", passengerId);
+	public Page<Order> getPassengerOrders(String passengerId, long pageNumber,
+			long limit) {
+		Sql sql = new SimpleSql(
+				"select * from `order` where passengerId=? order createTime desc",
+				passengerId);
 		return db.getPage(Order.class, sql, pageNumber, limit);
 	}
 
 	@Override
 	public Page<Order> getTaxiOrders(String taxiId, long pageNumber, long limit) {
-		Sql sql = new SimpleSql("select * from `order` where taxiId=? order createTime desc", taxiId);
+		Sql sql = new SimpleSql(
+				"select * from `order` where taxiId=? order createTime desc",
+				taxiId);
 		return db.getPage(Order.class, sql, pageNumber, limit);
 	}
 
 	@Override
 	public Order getTaxiOrdersInProgress(String taxiId) {
-		Sql sql = new SimpleSql("select * from `order` where taxiId=? order createTime desc limit 0,1", taxiId);
+		Sql sql = new SimpleSql(
+				"select * from `order` where taxiId=? and status in (?,?) order createTime desc limit 0,1",
+				taxiId, OrderStatus.CONFIRM, OrderStatus.RECEIVE_PASSENGER
+						.getCode());
 		return db.query(Order.class, sql).first();
 	}
 
 	@Override
 	public Order getPassengerOrdersInProgress(String passengerId) {
-		Sql sql = new SimpleSql("select * from `order` where passengerId=? order createTime desc limit 0,1",
-				passengerId);
+		Sql sql = new SimpleSql(
+				"select * from `order` where passengerId=? and status in(?,?,?,?,?) order createTime desc limit 0,1",
+				passengerId, OrderStatus.RECORD.getCode(),
+				OrderStatus.PRE_CONFIRM.getCode(), OrderStatus.CONFIRM
+						.getCode(), OrderStatus.CONFIRM_TIMEOUT.getCode(),
+				OrderStatus.RECEIVE_PASSENGER.getCode());
 		return db.query(Order.class, sql).first();
 	}
 }
