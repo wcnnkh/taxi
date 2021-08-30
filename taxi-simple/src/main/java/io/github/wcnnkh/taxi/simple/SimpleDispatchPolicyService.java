@@ -2,15 +2,15 @@ package io.github.wcnnkh.taxi.simple;
 
 import java.io.File;
 
+import io.basc.framework.context.annotation.Provider;
+import io.basc.framework.core.Ordered;
+import io.basc.framework.env.Sys;
+import io.basc.framework.event.EventListener;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.enums.OrderStatus;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEvent;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
 import io.github.wcnnkh.taxi.core.service.DispatchPolicyService;
-import scw.context.annotation.Provider;
-import scw.core.Ordered;
-import scw.env.Sys;
-import scw.event.EventListener;
 
 /**
  * 简单的调度策略实现

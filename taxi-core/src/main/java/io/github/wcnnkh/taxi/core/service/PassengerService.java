@@ -1,7 +1,7 @@
 package io.github.wcnnkh.taxi.core.service;
 
-import io.github.wcnnkh.taxi.core.dto.Trace;
 import io.github.wcnnkh.taxi.core.dto.Passenger;
+import io.github.wcnnkh.taxi.core.dto.Trace;
 
 public interface PassengerService {
 	/**

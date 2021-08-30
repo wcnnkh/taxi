@@ -8,8 +8,8 @@
   <artifactId>taxi-core</artifactId>
   <dependencies>
   	<dependency>
-  		<groupId>scw</groupId>
-  		<artifactId>scw-orm</artifactId>
+  		<groupId>io.basc.framework</groupId>
+  		<artifactId>orm</artifactId>
   	</dependency>
   </dependencies>
 </project>

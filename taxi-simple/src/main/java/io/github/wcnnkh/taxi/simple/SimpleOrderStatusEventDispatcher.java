@@ -1,10 +1,10 @@
 package io.github.wcnnkh.taxi.simple;
 
+import io.basc.framework.context.annotation.Provider;
+import io.basc.framework.core.Ordered;
+import io.basc.framework.event.support.SimpleAsyncEventDispatcher;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEvent;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
-import scw.context.annotation.Provider;
-import scw.core.Ordered;
-import scw.event.support.SimpleAsyncEventDispatcher;
 
 @Provider(order = Ordered.LOWEST_PRECEDENCE)
 public class SimpleOrderStatusEventDispatcher extends SimpleAsyncEventDispatcher<OrderStatusEvent> implements OrderStatusEventDispatcher{

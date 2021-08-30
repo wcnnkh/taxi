@@ -10,8 +10,12 @@
 	<artifactId>taxi-web</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>scw</groupId>
-			<artifactId>scw-websocket</artifactId>
+			<groupId>io.basc.framework</groupId>
+			<artifactId>websocket</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.basc.framework</groupId>
+			<artifactId>swagger</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.github.wcnkh</groupId>

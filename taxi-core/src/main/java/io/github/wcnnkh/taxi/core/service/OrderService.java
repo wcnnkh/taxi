@@ -1,10 +1,10 @@
 package io.github.wcnnkh.taxi.core.service;
 
+import io.basc.framework.util.page.Page;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.dto.PostOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.UpdateOrderStatusRequest;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
-import scw.util.page.Page;
 
 public interface OrderService {
 	Order getOrder(String orderId);

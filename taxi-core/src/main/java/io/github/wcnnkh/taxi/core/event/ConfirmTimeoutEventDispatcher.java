@@ -1,6 +1,6 @@
 package io.github.wcnnkh.taxi.core.event;
 
-import scw.event.DelayableEventDispatcher;
+import io.basc.framework.event.DelayableEventDispatcher;
 
 /**
  * 确认超时事件

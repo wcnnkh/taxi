@@ -1,6 +1,4 @@
-package io.github.wcnnnkh;
-
-import io.github.wcnnkh.taxi.TaxiExampleApplication;
+package io.github.wcnnkh.taxi;
 
 public class TaxiTestMain {
 	public static void main(String[] args) {

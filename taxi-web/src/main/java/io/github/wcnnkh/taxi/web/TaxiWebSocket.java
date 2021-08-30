@@ -12,17 +12,17 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import io.basc.framework.event.EventListener;
+import io.basc.framework.json.JSONUtils;
+import io.basc.framework.logger.Logger;
+import io.basc.framework.logger.LoggerFactory;
+import io.basc.framework.util.StringUtils;
+import io.basc.framework.web.servlet.socket.ContainerConfigurator;
+import io.basc.framework.websocket.adapter.standard.SafeStandardSessionManager;
 import io.github.wcnnkh.taxi.core.dto.Trace;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEvent;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
 import io.github.wcnnkh.taxi.core.service.TaxiService;
-import scw.core.utils.StringUtils;
-import scw.event.EventListener;
-import scw.json.JSONUtils;
-import scw.logger.Logger;
-import scw.logger.LoggerFactory;
-import scw.web.servlet.socket.ContainerConfigurator;
-import scw.websocket.adapter.standard.SafeStandardSessionManager;
 
 @ServerEndpoint(value = "/taxi/websocket/{taxiId}", configurator = ContainerConfigurator.class)
 public class TaxiWebSocket implements EventListener<OrderStatusEvent> {

@@ -5,18 +5,18 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
-import io.github.wcnnkh.taxi.core.dto.TaxiOrderRequest;
+import io.basc.framework.beans.annotation.Autowired;
+import io.basc.framework.context.result.DataResult;
+import io.basc.framework.context.result.Result;
+import io.basc.framework.context.result.ResultFactory;
+import io.basc.framework.util.page.Page;
+import io.basc.framework.web.message.annotation.RequestBody;
 import io.github.wcnnkh.taxi.core.dto.Order;
+import io.github.wcnnkh.taxi.core.dto.TaxiOrderRequest;
 import io.github.wcnnkh.taxi.core.service.DispatchService;
 import io.github.wcnnkh.taxi.core.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import scw.beans.annotation.Autowired;
-import scw.context.result.DataResult;
-import scw.context.result.Result;
-import scw.context.result.ResultFactory;
-import scw.util.page.Page;
 
 @Tag(name = "司机(车辆)操作")
 @Path("/taxi")

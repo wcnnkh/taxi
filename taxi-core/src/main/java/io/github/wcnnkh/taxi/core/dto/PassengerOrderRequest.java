@@ -2,8 +2,8 @@ package io.github.wcnnkh.taxi.core.dto;
 
 import java.io.Serializable;
 
+import io.basc.framework.orm.annotation.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import scw.orm.annotation.Entity;
 
 @Entity
 public class PassengerOrderRequest implements Serializable {

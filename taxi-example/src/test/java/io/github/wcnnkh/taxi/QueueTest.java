@@ -1,6 +1,6 @@
-package io.github.wcnnnkh;
+package io.github.wcnnkh.taxi;
 
-import scw.util.concurrent.TaskQueue;
+import io.basc.framework.util.concurrent.TaskQueue;
 
 public class QueueTest {
 	public static void main(String[] args) {

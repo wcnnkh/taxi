@@ -1,6 +1,6 @@
-package io.github.wcnnnkh;
+package io.github.wcnnkh.taxi;
 
-import scw.mapper.MapperUtils;
+import io.basc.framework.mapper.MapperUtils;
 
 public class TestBean {
 	private String name;

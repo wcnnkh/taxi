@@ -1,14 +1,13 @@
 package io.github.wcnnkh.taxi.core.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.io.Serializable;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import scw.mapper.MapperUtils;
-import scw.orm.annotation.Entity;
+import io.basc.framework.mapper.MapperUtils;
+import io.basc.framework.orm.annotation.Entity;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity
 public class NearbyTaxiQuery implements Serializable {

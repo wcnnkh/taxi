@@ -1,6 +1,6 @@
 package io.github.wcnnkh.taxi.core.event;
 
-import scw.event.EventDispatcher;
+import io.basc.framework.event.EventDispatcher;
 
 /**
  * 订单事件分发

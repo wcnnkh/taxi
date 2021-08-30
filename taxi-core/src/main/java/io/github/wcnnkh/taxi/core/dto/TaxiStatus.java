@@ -2,8 +2,8 @@ package io.github.wcnnkh.taxi.core.dto;
 
 import java.io.Serializable;
 
-import scw.mapper.MapperUtils;
-import scw.orm.annotation.Entity;
+import io.basc.framework.mapper.MapperUtils;
+import io.basc.framework.orm.annotation.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Entity

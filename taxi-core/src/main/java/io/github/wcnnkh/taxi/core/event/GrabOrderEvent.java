@@ -1,7 +1,7 @@
 package io.github.wcnnkh.taxi.core.event;
 
+import io.basc.framework.event.BasicEvent;
 import io.github.wcnnkh.taxi.core.dto.TaxiOrderRequest;
-import scw.event.BasicEvent;
 
 public class GrabOrderEvent extends BasicEvent {
 	private static final long serialVersionUID = 1L;

@@ -1,8 +1,8 @@
 package io.github.wcnnkh.taxi.core.event;
 
+import io.basc.framework.event.BasicEvent;
+import io.basc.framework.mapper.MapperUtils;
 import io.github.wcnnkh.taxi.core.dto.Order;
-import scw.event.BasicEvent;
-import scw.mapper.MapperUtils;
 
 public class OrderStatusEvent extends BasicEvent {
 	private static final long serialVersionUID = 1L;

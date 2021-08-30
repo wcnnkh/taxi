@@ -2,11 +2,11 @@ package io.github.wcnnkh.taxi.core.dto;
 
 import javax.validation.constraints.NotNull;
 
+import io.basc.framework.mapper.MapperUtils;
+import io.basc.framework.orm.annotation.Entity;
+import io.basc.framework.orm.annotation.PrimaryKey;
 import io.github.wcnnkh.taxi.core.enums.OrderStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import scw.mapper.MapperUtils;
-import scw.orm.annotation.Entity;
-import scw.orm.annotation.PrimaryKey;
 
 @Entity
 public class Order extends PostOrderRequest {

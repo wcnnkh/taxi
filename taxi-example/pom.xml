@@ -10,8 +10,8 @@
 	<artifactId>taxi-example</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>scw</groupId>
-			<artifactId>scw-tomcat</artifactId>
+			<groupId>io.basc.framework</groupId>
+			<artifactId>tomcat</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>io.github.wcnkh</groupId>
@@ -22,12 +22,12 @@
 			<artifactId>taxi-simple</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>scw</groupId>
-			<artifactId>scw-sqlite</artifactId>
+			<groupId>io.basc.framework</groupId>
+			<artifactId>sqlite</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>scw</groupId>
-			<artifactId>scw-log4j</artifactId>
+			<groupId>io.basc.framework</groupId>
+			<artifactId>log4j</artifactId>
 		</dependency>
 	</dependencies>
 	

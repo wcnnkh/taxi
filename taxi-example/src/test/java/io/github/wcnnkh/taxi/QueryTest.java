@@ -1,11 +1,11 @@
-package io.github.wcnnnkh;
+package io.github.wcnnkh.taxi;
 
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.TermQuery;
 
-import scw.lucene.DefaultLuceneTemplate;
-import scw.lucene.LuceneTemplate;
-import scw.lucene.SearchParameters;
+import io.basc.framework.lucene.DefaultLuceneTemplate;
+import io.basc.framework.lucene.LuceneTemplate;
+import io.basc.framework.lucene.SearchParameters;
 
 public class QueryTest {
 	public static void main(String[] args) {

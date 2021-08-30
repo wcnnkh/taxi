@@ -2,7 +2,7 @@ package io.github.wcnnkh.taxi.web;
 
 import java.io.Serializable;
 
-import scw.json.JSONUtils;
+import io.basc.framework.json.JSONUtils;
 
 /**
  * 心跳

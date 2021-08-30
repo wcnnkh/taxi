@@ -1,11 +1,11 @@
 package io.github.wcnnkh.taxi.core.dto;
 
-import io.github.wcnnkh.taxi.core.enums.OrderStatus;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
+
+import io.github.wcnnkh.taxi.core.enums.OrderStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class UpdateOrderStatusRequest implements Serializable {
 	private static final long serialVersionUID = 1L;

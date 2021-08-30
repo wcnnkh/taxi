@@ -1,11 +1,11 @@
 package io.github.wcnnkh.taxi;
 
-import scw.beans.annotation.Bean;
-import scw.boot.support.MainApplication;
-import scw.db.DB;
-import scw.env.Sys;
-import scw.sqlite.SQLiteDB;
-import scw.web.support.StaticResourceRegistry;
+import io.basc.framework.beans.annotation.Bean;
+import io.basc.framework.boot.support.MainApplication;
+import io.basc.framework.db.DB;
+import io.basc.framework.env.Sys;
+import io.basc.framework.sqlite.SQLiteDB;
+import io.basc.framework.web.resource.StaticResourceRegistry;
 
 public class TaxiExampleApplication {
 	public static void main(String[] args) {
