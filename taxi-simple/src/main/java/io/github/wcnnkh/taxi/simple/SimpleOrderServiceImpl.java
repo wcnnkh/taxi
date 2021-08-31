@@ -117,7 +117,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 	public Page<Order> getPassengerOrders(String passengerId, long pageNumber,
 			long limit) {
 		Sql sql = new SimpleSql(
-				"select * from `order` where passengerId=? order createTime desc",
+				"select * from `order` where passengerId=? order by createTime desc",
 				passengerId);
 		return db.getPage(Order.class, sql, pageNumber, limit);
 	}
@@ -125,7 +125,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 	@Override
 	public Page<Order> getTaxiOrders(String taxiId, long pageNumber, long limit) {
 		Sql sql = new SimpleSql(
-				"select * from `order` where taxiId=? order createTime desc",
+				"select * from `order` where taxiId=? order by createTime desc",
 				taxiId);
 		return db.getPage(Order.class, sql, pageNumber, limit);
 	}
@@ -133,7 +133,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 	@Override
 	public Order getTaxiOrdersInProgress(String taxiId) {
 		Sql sql = new SimpleSql(
-				"select * from `order` where taxiId=? and status in (?,?) order createTime desc limit 0,1",
+				"select * from `order` where taxiId=? and status in (?,?) order by createTime desc limit 0,1",
 				taxiId, OrderStatus.CONFIRM, OrderStatus.RECEIVE_PASSENGER
 						.getCode());
 		return db.query(Order.class, sql).first();
@@ -142,7 +142,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 	@Override
 	public Order getPassengerOrdersInProgress(String passengerId) {
 		Sql sql = new SimpleSql(
-				"select * from `order` where passengerId=? and status in(?,?,?,?,?) order createTime desc limit 0,1",
+				"select * from `order` where passengerId=? and status in(?,?,?,?,?) order by createTime desc limit 0,1",
 				passengerId, OrderStatus.RECORD.getCode(),
 				OrderStatus.PRE_CONFIRM.getCode(), OrderStatus.CONFIRM
 						.getCode(), OrderStatus.CONFIRM_TIMEOUT.getCode(),
