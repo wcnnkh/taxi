@@ -4,6 +4,7 @@ import javax.validation.Valid;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 
 import io.basc.framework.beans.annotation.Autowired;
 import io.basc.framework.context.result.DataResult;
@@ -47,9 +48,10 @@ public class TaxiController {
 		return resultFactory.error("确认失败");
 	}
 	
+	@Operation(description = "获取司机订单历史记录")
 	@GET
 	@Path("/orders")
-	public DataResult<Page<Order>> getOrders(String taxiId, long pageNumber, long limit){
+	public DataResult<Page<Order>> getOrders(@QueryParam("taxiId") String taxiId, @QueryParam("pageNumber") long pageNumber, @QueryParam("limit") long limit){
 		return resultFactory.success(orderService.getTaxiOrders(taxiId, pageNumber, limit));
 	}
 
