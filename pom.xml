@@ -5,7 +5,7 @@
     <artifactId>start</artifactId>
     <version>1.8.0</version>
   </parent>
-  <groupId>io.github.wcnkh</groupId>
+  <groupId>io.github.wcnnkh</groupId>
   <artifactId>taxi</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -19,18 +19,18 @@
   <dependencyManagement>
   	<dependencies>
   		<dependency>
-  			<groupId>io.github.wcnkh</groupId>
+  			<groupId>io.github.wcnnkh</groupId>
   			<artifactId>taxi-core</artifactId>
   			<version>0.0.1-SNAPSHOT</version>
   		</dependency>
   		<dependency>
-  			<groupId>io.github.wcnkh</groupId>
+  			<groupId>io.github.wcnnkh</groupId>
   			<artifactId>taxi-simple</artifactId>
   			<version>0.0.1-SNAPSHOT</version>
   		</dependency>
   		
   		<dependency>
-  			<groupId>io.github.wcnkh</groupId>
+  			<groupId>io.github.wcnnkh</groupId>
   			<artifactId>taxi-web</artifactId>
   			<version>0.0.1-SNAPSHOT</version>
   		</dependency>
