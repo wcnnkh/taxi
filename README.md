@@ -1,14 +1,16 @@
 # taxi
 一个乘客打车和司机抢单的实现
 
-#demo(请不要将司机端和乘客端运行在同一个浏览器上，否则会出现找不到该司机的情况)
+#1. demo演示(请不要将司机端和乘客端运行在同一个浏览器上，否则会出现找不到该司机的情况)
 
 乘客端 https://shuchaowen.com/client/passenger.html
 
 司机端 https://shuchaowen.com/client/client.html
 
-#运行
-1. 下载jar
+----
+#2.运行
+
+1.下载jar
 
 http://maven.shuchaowen.com/io/github/wcnnkh/taxi-example/0.0.1-SNAPSHOT/taxi-example-0.0.1-SNAPSHOT.jar
 
