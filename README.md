@@ -24,6 +24,8 @@ https://github.com/wcnnkh/start
 
 2.运行jar包,-p参数可指定端口号，默认为8080端口
 
-乘客端 https://localhost:8080/client/passenger.html
+乘客端 http://localhost:8080/client/passenger.html
 
-司机端 https://localhost:8080/client/client.html
+司机端 http://localhost:8080/client/client.html
+
+本地运行在某些浏览器下因为权限问题无法获取定位信息(推荐使用google)
