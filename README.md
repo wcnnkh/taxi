@@ -31,3 +31,11 @@ https://github.com/wcnnkh/start
 司机端 http://localhost:8080/client/taxi.html
 
 本地运行在某些浏览器下因为权限问题无法获取定位信息(推荐使用google)
+
+3.推荐将高德的key换成自己的,否则可能因访问限制无法使用，需要更新的地方：
+
+https://github.com/wcnnkh/taxi/blob/master/taxi-example/src/main/resources/client/passenger.html
+
+https://github.com/wcnnkh/taxi/blob/master/taxi-example/src/main/resources/client/taxi.html
+
+申请地址: https://lbs.amap.com/
