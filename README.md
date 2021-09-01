@@ -5,7 +5,7 @@
 
 乘客端 https://shuchaowen.com/client/passenger.html
 
-司机端 https://shuchaowen.com/client/client.html
+司机端 https://shuchaowen.com/client/taxi.html
 
 ----
 #2.运行
@@ -26,6 +26,6 @@ https://github.com/wcnnkh/start
 
 乘客端 http://localhost:8080/client/passenger.html
 
-司机端 http://localhost:8080/client/client.html
+司机端 http://localhost:8080/client/taxi.html
 
 本地运行在某些浏览器下因为权限问题无法获取定位信息(推荐使用google)
