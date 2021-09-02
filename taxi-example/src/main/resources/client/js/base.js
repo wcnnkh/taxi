@@ -1,3 +1,8 @@
+var globalConfig = {
+	"heartbeatCycle": 2000  //心跳周期
+}
+
+
 function toLocation(geo) {
 	return {
 		"longitude": geo.position.lng,
