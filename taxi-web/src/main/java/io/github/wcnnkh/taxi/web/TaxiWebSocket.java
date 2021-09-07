@@ -17,17 +17,17 @@ import io.basc.framework.json.JSONUtils;
 import io.basc.framework.logger.Logger;
 import io.basc.framework.logger.LoggerFactory;
 import io.basc.framework.util.StringUtils;
-import io.basc.framework.websocket.adapter.standard.ContainerConfigurator;
-import io.basc.framework.websocket.adapter.standard.SafeStandardSessionManager;
+import io.basc.framework.websocket.adapter.standard.StandardContainerConfigurator;
+import io.basc.framework.websocket.adapter.standard.StandardSessionManager;
 import io.github.wcnnkh.taxi.core.dto.Trace;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEvent;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
 import io.github.wcnnkh.taxi.core.service.TaxiService;
 
-@ServerEndpoint(value = "/taxi/websocket/{taxiId}", configurator = ContainerConfigurator.class)
+@ServerEndpoint(value = "/taxi/websocket/{taxiId}", configurator = StandardContainerConfigurator.class)
 public class TaxiWebSocket implements EventListener<OrderStatusEvent> {
 	private static Logger logger = LoggerFactory.getLogger(TaxiWebSocket.class);
-	private static SafeStandardSessionManager<String> sessionManager = new SafeStandardSessionManager<String>("taxi");
+	private static StandardSessionManager<String> sessionManager = new StandardSessionManager<String>("taxi");
 	private final TaxiService taxiService;
 
 	public TaxiWebSocket(TaxiService taxiService, OrderStatusEventDispatcher orderStatusEventDispatcher) {

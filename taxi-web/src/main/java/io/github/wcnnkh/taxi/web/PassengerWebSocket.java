@@ -20,8 +20,8 @@ import io.basc.framework.json.JSONUtils;
 import io.basc.framework.logger.Logger;
 import io.basc.framework.logger.LoggerFactory;
 import io.basc.framework.util.StringUtils;
-import io.basc.framework.websocket.adapter.standard.ContainerConfigurator;
-import io.basc.framework.websocket.adapter.standard.SafeStandardSessionManager;
+import io.basc.framework.websocket.adapter.standard.StandardContainerConfigurator;
+import io.basc.framework.websocket.adapter.standard.StandardSessionManager;
 import io.github.wcnnkh.taxi.core.dto.NearbyTaxiQuery;
 import io.github.wcnnkh.taxi.core.dto.Taxi;
 import io.github.wcnnkh.taxi.core.dto.TaxiStatus;
@@ -31,10 +31,10 @@ import io.github.wcnnkh.taxi.core.event.OrderStatusEventDispatcher;
 import io.github.wcnnkh.taxi.core.service.PassengerService;
 import io.github.wcnnkh.taxi.core.service.TaxiService;
 
-@ServerEndpoint(value = "/passenger/websocket/{passengerId}", configurator = ContainerConfigurator.class)
+@ServerEndpoint(value = "/passenger/websocket/{passengerId}", configurator = StandardContainerConfigurator.class)
 public class PassengerWebSocket implements EventListener<OrderStatusEvent> {
 	private static Logger logger = LoggerFactory.getLogger(PassengerWebSocket.class);
-	private static SafeStandardSessionManager<String> sessionManager = new SafeStandardSessionManager<>("passenger");
+	private static StandardSessionManager<String> sessionManager = new StandardSessionManager<>("passenger");
 	private final PassengerService passengerService;
 	private final TaxiService taxiService;
 	private final Executor pushExecutor = Executors.newWorkStealingPool();
