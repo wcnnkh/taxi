@@ -17,7 +17,7 @@ import io.basc.framework.json.JSONUtils;
 import io.basc.framework.logger.Logger;
 import io.basc.framework.logger.LoggerFactory;
 import io.basc.framework.util.StringUtils;
-import io.basc.framework.web.servlet.socket.ContainerConfigurator;
+import io.basc.framework.websocket.adapter.standard.ContainerConfigurator;
 import io.basc.framework.websocket.adapter.standard.SafeStandardSessionManager;
 import io.github.wcnnkh.taxi.core.dto.Trace;
 import io.github.wcnnkh.taxi.core.event.OrderStatusEvent;
