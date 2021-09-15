@@ -1,7 +1,7 @@
 # taxi
 一个乘客打车和司机抢单的实现
 
-# 1. demo演示(请不要将司机端和乘客端运行在同一个浏览器上，否则会出现找不到该司机的情况)
+# 1. demo演示
 
 乘客端 https://shuchaowen.com/client/passenger.html
 
