@@ -14,7 +14,7 @@
 
 1.下载jar
 
-http://maven.shuchaowen.com/io/github/wcnnkh/taxi-example/0.0.1-SNAPSHOT/taxi-example-0.0.1-SNAPSHOT.jar
+http://basc.io/io/github/wcnnkh/taxi-example/0.0.1-SNAPSHOT/taxi-example-0.0.1-SNAPSHOT.jar
 
 或
 
