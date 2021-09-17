@@ -106,7 +106,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 	public Order record(PostOrderRequest request) {
 		Order order = new Order();
 		order.setId(XUtils.getUUID());
-		Copy.copy(order, request);
+		Copy.copy(request, order);
 		order.setStatus(OrderStatus.RECORD.getCode());
 		order.setCreateTime(System.currentTimeMillis());
 		db.save(tableStructure, order);

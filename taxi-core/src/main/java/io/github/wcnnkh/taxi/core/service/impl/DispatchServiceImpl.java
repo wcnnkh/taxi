@@ -96,7 +96,7 @@ public class DispatchServiceImpl implements DispatchService {
 		updateStatusRequest.setStatus(OrderStatus.CONFIRM);
 		if (orderService.updateStatus(updateStatusRequest)) {
 			Order newOrder = new Order();
-			Copy.copy(newOrder, order);
+			Copy.copy(order, newOrder);
 			newOrder.setStatus(OrderStatus.CONFIRM.getCode());
 			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(order,
 					newOrder));

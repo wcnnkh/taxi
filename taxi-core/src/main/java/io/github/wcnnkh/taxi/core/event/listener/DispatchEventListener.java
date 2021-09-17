@@ -77,7 +77,7 @@ public class DispatchEventListener implements EventListener<ObjectEvent<Order>> 
 			}
 		
 			Order order = new Order();
-			Copy.copy(order, dispathOrder);
+			Copy.copy(dispathOrder, order);
 			order.setTaxiId(taxi.getId());
 			orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(dispathOrder, order));
 		}
@@ -105,7 +105,7 @@ public class DispatchEventListener implements EventListener<ObjectEvent<Order>> 
 			request.setStatus(OrderStatus.NO_SUPPLY);
 			if (orderService.updateStatus(request)) {
 				Order newOrder = new Order();
-				Copy.copy(newOrder, dispatchOrder);
+				Copy.copy(dispatchOrder, newOrder);
 				newOrder.setStatus(OrderStatus.NO_SUPPLY.getCode());
 				logger.info("发送无供事件:{}", dispatchOrder.getId());
 				orderStatusEventDispatcher.publishEvent(new OrderStatusEvent(dispatchOrder, newOrder));
