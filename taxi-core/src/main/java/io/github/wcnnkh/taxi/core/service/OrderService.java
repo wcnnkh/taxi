@@ -37,7 +37,7 @@ public interface OrderService {
 	 * @param taxiId
 	 * @return
 	 */
-	Order getTaxiOrdersInProgress(String taxiId);
+	Order getTaxiOrderInProgress(String taxiId);
 
 	/**
 	 * 乘客正在进行中的订单
@@ -45,5 +45,5 @@ public interface OrderService {
 	 * @param passengerId
 	 * @return
 	 */
-	Order getPassengerOrdersInProgress(String passengerId);
+	Order getPassengerOrderInProgress(String passengerId);
 }

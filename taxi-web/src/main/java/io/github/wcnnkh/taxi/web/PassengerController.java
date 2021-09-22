@@ -43,8 +43,7 @@ public class PassengerController {
 	@POST
 	@Path("/post_order")
 	public DataResult<Order> postOrder(@RequestBody @Valid @BeanParam PostOrderRequest request) {
-		Order order = dispatchService.postOrder(request);
-		return resultFactory.success(order);
+		return dispatchService.postOrder(request);
 	};
 
 	@Operation(description = "获取乘客附近车辆")

@@ -1,5 +1,7 @@
 package io.github.wcnnkh.taxi.core.service;
 
+import io.basc.framework.context.result.DataResult;
+import io.basc.framework.context.result.Result;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.dto.PassengerOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.PostOrderRequest;
@@ -16,14 +18,14 @@ public interface DispatchService {
 	 * 
 	 * @param request
 	 */
-	Order postOrder(PostOrderRequest request);
+	DataResult<Order> postOrder(PostOrderRequest request);
 
 	/**
 	 * 抢单
 	 * 
 	 * @param request
 	 */
-	void grabOrder(TaxiOrderRequest request);
+	Result grabOrder(TaxiOrderRequest request);
 	
 	/**
 	 * 确认订单

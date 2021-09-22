@@ -131,7 +131,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Order getTaxiOrdersInProgress(String taxiId) {
+	public Order getTaxiOrderInProgress(String taxiId) {
 		Sql sql = new SimpleSql(
 				"select * from `order` where taxiId=? and status in (?,?) order by createTime desc limit 0,1",
 				taxiId, OrderStatus.CONFIRM, OrderStatus.RECEIVE_PASSENGER
@@ -140,7 +140,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Order getPassengerOrdersInProgress(String passengerId) {
+	public Order getPassengerOrderInProgress(String passengerId) {
 		Sql sql = new SimpleSql(
 				"select * from `order` where passengerId=? and status in(?,?,?,?,?) order by createTime desc limit 0,1",
 				passengerId, OrderStatus.RECORD.getCode(),

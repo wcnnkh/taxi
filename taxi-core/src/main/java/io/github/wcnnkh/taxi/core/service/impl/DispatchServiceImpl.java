@@ -1,6 +1,9 @@
 package io.github.wcnnkh.taxi.core.service.impl;
 
 import io.basc.framework.context.annotation.Provider;
+import io.basc.framework.context.result.DataResult;
+import io.basc.framework.context.result.Result;
+import io.basc.framework.context.result.ResultFactory;
 import io.basc.framework.core.Ordered;
 import io.basc.framework.event.ObjectEvent;
 import io.basc.framework.mapper.Copy;
@@ -32,6 +35,7 @@ public class DispatchServiceImpl implements DispatchService {
 	private long defaultDispatchTime = 60000;
 	private final OrderService orderService;
 	private final DispatchEventDispatcher dispatchEventDispatcher;
+	private final ResultFactory resultFactory;
 
 	public DispatchServiceImpl(
 			OrderStatusEventDispatcher orderStatusEventDispatcher,
@@ -40,7 +44,7 @@ public class DispatchServiceImpl implements DispatchService {
 			OrderService orderService, TaxiService taxiService,
 			ConfirmTimeoutEventDispatcher confirmTimeoutEventDispatcher,
 			DispatchPolicyService dispatchPolicyService,
-			AgainDispatchEventDispatcher againDispatchEventDispatcher) {
+			AgainDispatchEventDispatcher againDispatchEventDispatcher, ResultFactory resultFactory) {
 		this.orderStatusEventDispatcher = orderStatusEventDispatcher;
 		this.grabOrderEventDispatcher = grabOrderEventDispatcher;
 		this.orderService = orderService;
@@ -54,6 +58,7 @@ public class DispatchServiceImpl implements DispatchService {
 		confirmTimeoutEventDispatcher
 				.registerListener(new ConfirmTimeoutEventListener(orderService,
 						againDispatchEventDispatcher, dispatchEventDispatcher));
+		this.resultFactory = resultFactory;
 	}
 
 	public long getDefaultDispatchTime() {
@@ -65,7 +70,12 @@ public class DispatchServiceImpl implements DispatchService {
 	}
 
 	@Override
-	public Order postOrder(PostOrderRequest request) {
+	public DataResult<Order> postOrder(PostOrderRequest request) {
+		Order inProcessing = orderService.getPassengerOrderInProgress(request.getPassengerId());
+		if(inProcessing != null) {
+			return resultFactory.error("存在进行中的订单");
+		}
+		
 		if (request.getDispatchTimeout() == null) {
 			request.setDispatchTimeout(getDefaultDispatchTime());
 		}
@@ -75,12 +85,17 @@ public class DispatchServiceImpl implements DispatchService {
 				order));
 		// 录单，开始发送订单通知给司机让司机抢单
 		dispatchEventDispatcher.publishEvent(new ObjectEvent<>(order));
-		return order;
+		return resultFactory.success(order);
 	}
 
 	@Override
-	public void grabOrder(TaxiOrderRequest request) {
+	public Result grabOrder(TaxiOrderRequest request) {
+		Order order = orderService.getTaxiOrderInProgress(request.getTaxiId());
+		if(order != null) {
+			return resultFactory.error("存在进行中的订单");
+		}
 		grabOrderEventDispatcher.publishEvent(new GrabOrderEvent(request));
+		return resultFactory.success();
 	}
 
 	@Override
