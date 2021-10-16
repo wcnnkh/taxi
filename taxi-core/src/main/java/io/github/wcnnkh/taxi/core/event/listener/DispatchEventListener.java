@@ -72,8 +72,8 @@ public class DispatchEventListener implements EventListener<ObjectEvent<Order>> 
 				continue;
 			}
 
-			if(logger.isTraceEnabled()) {
-				logger.trace("推送给司机[{}]进行抢单:{}", taxi.getId(), dispathOrder.getId());
+			if(logger.isDebugEnabled()) {
+				logger.debug("订单[{}]推送给司机[{}]进行抢单", dispathOrder.getId(), taxi.getId());
 			}
 		
 			Order order = new Order();

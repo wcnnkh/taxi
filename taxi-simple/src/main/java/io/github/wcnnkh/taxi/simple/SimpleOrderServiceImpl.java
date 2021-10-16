@@ -6,7 +6,6 @@ import io.basc.framework.db.DB;
 import io.basc.framework.mapper.Copy;
 import io.basc.framework.orm.sql.StandardTableStructure;
 import io.basc.framework.orm.sql.TableStructure;
-import io.basc.framework.orm.sql.TableStructureMapProcessor;
 import io.basc.framework.sql.SimpleSql;
 import io.basc.framework.sql.Sql;
 import io.basc.framework.util.XUtils;
@@ -20,16 +19,15 @@ import io.github.wcnnkh.taxi.core.service.OrderService;
 @Provider(order = Ordered.LOWEST_PRECEDENCE)
 public class SimpleOrderServiceImpl implements OrderService {
 	private final DB db;
-	private final TableStructure tableStructure = StandardTableStructure
-			.wrapper(Order.class);
 
 	public SimpleOrderServiceImpl(DB db) {
 		this.db = db;
+		TableStructure tableStructure = StandardTableStructure
+				.wrapper(Order.class);
 		db.createTable(tableStructure);
-		db.getMapper().register(Order.class,
-				new TableStructureMapProcessor<>(tableStructure));
+		db.getStructureRegistry().register(Order.class, tableStructure);
 	}
-
+ 
 	@Override
 	public Order getOrder(String orderId) {
 		return db.getById(Order.class, orderId);
@@ -109,7 +107,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 		Copy.copy(request, order);
 		order.setStatus(OrderStatus.RECORD.getCode());
 		order.setCreateTime(System.currentTimeMillis());
-		db.save(tableStructure, order);
+		db.save(order);
 		return order;
 	}
 
