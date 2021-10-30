@@ -4,10 +4,10 @@ import io.basc.framework.context.annotation.Provider;
 import io.basc.framework.core.Ordered;
 import io.basc.framework.db.DB;
 import io.basc.framework.mapper.Copy;
-import io.basc.framework.orm.sql.StandardTableStructure;
-import io.basc.framework.orm.sql.TableStructure;
 import io.basc.framework.sql.SimpleSql;
 import io.basc.framework.sql.Sql;
+import io.basc.framework.sql.orm.TableStructure;
+import io.basc.framework.sql.orm.support.StandardTableStructure;
 import io.basc.framework.util.XUtils;
 import io.basc.framework.util.page.Page;
 import io.github.wcnnkh.taxi.core.dto.Order;
@@ -23,7 +23,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 	public SimpleOrderServiceImpl(DB db) {
 		this.db = db;
 		TableStructure tableStructure = StandardTableStructure
-				.wrapper(Order.class);
+				.resolveAll(db.getSqlDialect(), Order.class);
 		db.createTable(tableStructure);
 		db.getStructureRegistry().register(Order.class, tableStructure);
 	}
