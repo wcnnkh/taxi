@@ -9,7 +9,7 @@ import io.basc.framework.sql.Sql;
 import io.basc.framework.sql.orm.TableStructure;
 import io.basc.framework.sql.orm.support.StandardTableStructure;
 import io.basc.framework.util.XUtils;
-import io.basc.framework.util.page.Page;
+import io.basc.framework.util.page.Pagination;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.dto.PostOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.UpdateOrderStatusRequest;
@@ -112,7 +112,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Page<Order> getPassengerOrders(String passengerId, long pageNumber,
+	public Pagination<Order> getPassengerOrders(String passengerId, long pageNumber,
 			long limit) {
 		Sql sql = new SimpleSql(
 				"select * from `order` where passengerId=? order by createTime desc",
@@ -121,7 +121,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public Page<Order> getTaxiOrders(String taxiId, long pageNumber, long limit) {
+	public Pagination<Order> getTaxiOrders(String taxiId, long pageNumber, long limit) {
 		Sql sql = new SimpleSql(
 				"select * from `order` where taxiId=? order by createTime desc",
 				taxiId);

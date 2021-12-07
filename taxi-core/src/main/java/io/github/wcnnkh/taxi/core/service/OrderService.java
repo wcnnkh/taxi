@@ -1,6 +1,6 @@
 package io.github.wcnnkh.taxi.core.service;
 
-import io.basc.framework.util.page.Page;
+import io.basc.framework.util.page.Pagination;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.dto.PostOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.UpdateOrderStatusRequest;
@@ -27,9 +27,9 @@ public interface OrderService {
 	 */
 	boolean updateStatus(UpdateOrderStatusRequest request);
 
-	Page<Order> getPassengerOrders(String passengerId, long pageNumber, long limit);
+	Pagination<Order> getPassengerOrders(String passengerId, long pageNumber, long limit);
 
-	Page<Order> getTaxiOrders(String taxiId, long pageNumber, long limit);
+	Pagination<Order> getTaxiOrders(String taxiId, long pageNumber, long limit);
 
 	/**
 	 * 车辆正在进行中的订单

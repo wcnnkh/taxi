@@ -14,7 +14,7 @@ import javax.ws.rs.QueryParam;
 import io.basc.framework.beans.annotation.Autowired;
 import io.basc.framework.context.result.DataResult;
 import io.basc.framework.context.result.ResultFactory;
-import io.basc.framework.util.page.Page;
+import io.basc.framework.util.page.Pagination;
 import io.basc.framework.web.message.annotation.RequestBody;
 import io.github.wcnnkh.taxi.core.dto.NearbyTaxiQuery;
 import io.github.wcnnkh.taxi.core.dto.Order;
@@ -58,10 +58,10 @@ public class PassengerController {
 	@Operation(description = "获取乘客历史订单")
 	@GET
 	@Path("/orders")
-	public DataResult<Page<Order>> getOrders(
+	public DataResult<Pagination<Order>> getOrders(
 			@Parameter(description = "乘客id", required = true) @QueryParam("passengerId") String passengerId,
 			@Parameter(description = "页码") @QueryParam("pageNumber") long pageNumber,
 			@Parameter(description = "数量") @QueryParam("limit") @DefaultValue("10") long limit) {
-		return resultFactory.success(orderService.getPassengerOrders(passengerId, pageNumber, limit));
+		return resultFactory.success(orderService.getPassengerOrders(passengerId, pageNumber, limit).shared());
 	}
 }

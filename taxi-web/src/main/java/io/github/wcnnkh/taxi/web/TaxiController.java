@@ -10,7 +10,7 @@ import io.basc.framework.beans.annotation.Autowired;
 import io.basc.framework.context.result.DataResult;
 import io.basc.framework.context.result.Result;
 import io.basc.framework.context.result.ResultFactory;
-import io.basc.framework.util.page.Page;
+import io.basc.framework.util.page.Pagination;
 import io.basc.framework.web.message.annotation.RequestBody;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.dto.TaxiOrderRequest;
@@ -51,8 +51,8 @@ public class TaxiController {
 	@Operation(description = "获取司机订单历史记录")
 	@GET
 	@Path("/orders")
-	public DataResult<Page<Order>> getOrders(@QueryParam("taxiId") String taxiId, @QueryParam("pageNumber") long pageNumber, @QueryParam("limit") long limit){
-		return resultFactory.success(orderService.getTaxiOrders(taxiId, pageNumber, limit));
+	public DataResult<Pagination<Order>> getOrders(@QueryParam("taxiId") String taxiId, @QueryParam("pageNumber") long pageNumber, @QueryParam("limit") long limit){
+		return resultFactory.success(orderService.getTaxiOrders(taxiId, pageNumber, limit).shared());
 	}
 
 	@POST
