@@ -18,11 +18,7 @@ http://basc.io/io/github/wcnnkh/taxi-example/0.0.1-SNAPSHOT/taxi-example-0.0.1-S
 
 或
 
-下载源码自行打包，需要先打包父项目
-
-https://github.com/wcnnkh/framework
-
-https://github.com/wcnnkh/start
+下载源码自行打包[需要引用依赖](https://github.com/wcnnkh/start#1pomxml%E4%B8%AD%E5%BC%95%E5%85%A5%E4%BB%93%E5%BA%93)
 
 2.运行jar包,-p参数可指定端口号，默认为8080端口
 
