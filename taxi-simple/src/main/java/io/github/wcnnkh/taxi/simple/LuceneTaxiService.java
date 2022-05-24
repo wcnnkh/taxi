@@ -50,8 +50,8 @@ public class LuceneTaxiService implements TaxiService {
 	}
 
 	private void writeDocument(Document document, Trace trace) {
-		luceneTemplate.wrap(document, trace);
-		luceneTemplate.wrap(document, trace.getLocation());
+		luceneTemplate.getMapper().wrap(document, trace);
+		luceneTemplate.getMapper().wrap(document, trace.getLocation());
 		Point point = spatialContext.getShapeFactory().pointXY(trace.getLocation().getLongitude(),
 				trace.getLocation().getLatitude());
 		Field[] fields = strategy.createIndexableFields(point);
@@ -72,15 +72,16 @@ public class LuceneTaxiService implements TaxiService {
 
 	@Override
 	public List<Taxi> getNearbyTaxis(NearbyTaxiQuery query) {
-		Shape shape = spatialContext.getShapeFactory().circle(query.getLocation().getLongitude(), query.getLocation().getLatitude(), DistanceUtils.dist2Degrees(query.getDistance(),
-				DistanceUtils.EARTH_MEAN_RADIUS_KM));
+		Shape shape = spatialContext.getShapeFactory().circle(query.getLocation().getLongitude(),
+				query.getLocation().getLatitude(),
+				DistanceUtils.dist2Degrees(query.getDistance(), DistanceUtils.EARTH_MEAN_RADIUS_KM));
 		SpatialArgs args = new SpatialArgs(SpatialOperation.Intersects, shape);
 		Query luceneQuery = strategy.makeQuery(args);
 		SearchParameters parameters = new SearchParameters(luceneQuery, query.getCount());
 		SearchResults<Taxi> results = luceneTemplate.search(parameters, mapper);
 		return results.streamAll().filter((taxi) -> {
-			//超过10秒未上传心跳就忽略
-			if(System.currentTimeMillis() - taxi.getLocation().getTime() > 10000L){
+			// 超过10秒未上传心跳就忽略
+			if (System.currentTimeMillis() - taxi.getLocation().getTime() > 10000L) {
 				return false;
 			}
 			return true;
@@ -90,41 +91,35 @@ public class LuceneTaxiService implements TaxiService {
 	private ScoreDocMapper<Taxi> mapper = new ScoreDocMapper<Taxi>() {
 
 		@Override
-		public Taxi map(IndexSearcher indexSearcher,
-				ScoreDoc scoreDoc) throws IOException {
+		public Taxi map(IndexSearcher indexSearcher, ScoreDoc scoreDoc) throws IOException {
 			Document document = indexSearcher.doc(scoreDoc.doc);
 			Taxi taxi = new Taxi();
-			luceneTemplate.mapping(document, taxi);
-			taxi.setLocation(luceneTemplate.mapping(document,
-					new TraceLocation()));
-			taxi.setTaxiStatus(luceneTemplate.mapping(document,
-					new TaxiStatus()));
+			luceneTemplate.getMapper().wrap(document, taxi);
+			taxi.setLocation(luceneTemplate.getMapper().convert(document, TraceLocation.class));
+			taxi.setTaxiStatus(luceneTemplate.getMapper().convert(document, TaxiStatus.class));
 			return taxi;
 		}
 	};
 
 	@Override
 	public Taxi getTaxi(String taxiId) {
-		
+
 		TermQuery termQuery = new TermQuery(new Term("id", taxiId));
-		return luceneTemplate.search(new SearchParameters(termQuery, 1),
-				mapper).first();
+		return luceneTemplate.search(new SearchParameters(termQuery, 1), mapper).first();
 	}
 
 	@Override
 	public void setStatus(String taxiId, TaxiStatus taxiStatus) {
 		Taxi taxi = getTaxi(taxiId);
-		if(taxi == null){
-			return ;
+		if (taxi == null) {
+			return;
 		}
-		
+
 		taxi.setTaxiStatus(taxiStatus);
 		Document document = new Document();
-		luceneTemplate.mapping(document, taxi);
-		taxi.setLocation(luceneTemplate.mapping(document,
-				new TraceLocation()));
-		taxi.setTaxiStatus(luceneTemplate.mapping(document,
-				new TaxiStatus()));
+		luceneTemplate.getMapper().wrap(document, taxi);
+		taxi.setLocation(luceneTemplate.getMapper().convert(document, TraceLocation.class));
+		taxi.setTaxiStatus(luceneTemplate.getMapper().convert(document, TaxiStatus.class));
 		luceneTemplate.update(new Term("id", taxiId), document);
 	}
 

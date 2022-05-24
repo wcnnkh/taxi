@@ -40,8 +40,8 @@ public class LucenePassengerService implements PassengerService{
 	}
 	
 	private void writeDocument(Document document, Trace trace) {
-		luceneTemplate.wrap(document, trace);
-		luceneTemplate.wrap(document, trace.getLocation());
+		luceneTemplate.getMapper().wrap(document, trace);
+		luceneTemplate.getMapper().wrap(document, trace.getLocation());
 		Point point = spatialContext.getShapeFactory().pointXY(trace.getLocation().getLongitude(), trace.getLocation().getLatitude());
 		Field[] fields = strategy.createIndexableFields(point);
 		for (Field field : fields) {
@@ -66,9 +66,8 @@ public class LucenePassengerService implements PassengerService{
 				ScoreDoc scoreDoc) throws IOException {
 			Document document = indexSearcher.doc(scoreDoc.doc);
 			Passenger passenger = new Passenger();
-			luceneTemplate.mapping(document, passenger);
-			passenger.setLocation(luceneTemplate.mapping(document,
-					new TraceLocation()));
+			luceneTemplate.getMapper().transform(document, passenger);
+			passenger.setLocation(luceneTemplate.getMapper().convert(document,TraceLocation.class));
 			return passenger;
 		}
 	};
