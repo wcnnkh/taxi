@@ -40,8 +40,7 @@ public class LucenePassengerService implements PassengerService{
 	}
 	
 	private void writeDocument(Document document, Trace trace) {
-		luceneTemplate.getMapper().wrap(document, trace);
-		luceneTemplate.getMapper().wrap(document, trace.getLocation());
+		luceneTemplate.getMapper().reverseTransform(trace, document);
 		Point point = spatialContext.getShapeFactory().pointXY(trace.getLocation().getLongitude(), trace.getLocation().getLatitude());
 		Field[] fields = strategy.createIndexableFields(point);
 		for (Field field : fields) {

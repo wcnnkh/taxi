@@ -50,8 +50,7 @@ public class LuceneTaxiService implements TaxiService {
 	}
 
 	private void writeDocument(Document document, Trace trace) {
-		luceneTemplate.getMapper().wrap(document, trace);
-		luceneTemplate.getMapper().wrap(document, trace.getLocation());
+		luceneTemplate.getMapper().reverseTransform(trace, document);
 		Point point = spatialContext.getShapeFactory().pointXY(trace.getLocation().getLongitude(),
 				trace.getLocation().getLatitude());
 		Field[] fields = strategy.createIndexableFields(point);
@@ -94,7 +93,7 @@ public class LuceneTaxiService implements TaxiService {
 		public Taxi map(IndexSearcher indexSearcher, ScoreDoc scoreDoc) throws IOException {
 			Document document = indexSearcher.doc(scoreDoc.doc);
 			Taxi taxi = new Taxi();
-			luceneTemplate.getMapper().wrap(document, taxi);
+			luceneTemplate.getMapper().transform(document, taxi);
 			taxi.setLocation(luceneTemplate.getMapper().convert(document, TraceLocation.class));
 			taxi.setTaxiStatus(luceneTemplate.getMapper().convert(document, TaxiStatus.class));
 			return taxi;
@@ -117,9 +116,7 @@ public class LuceneTaxiService implements TaxiService {
 
 		taxi.setTaxiStatus(taxiStatus);
 		Document document = new Document();
-		luceneTemplate.getMapper().wrap(document, taxi);
-		taxi.setLocation(luceneTemplate.getMapper().convert(document, TraceLocation.class));
-		taxi.setTaxiStatus(luceneTemplate.getMapper().convert(document, TaxiStatus.class));
+		luceneTemplate.getMapper().reverseTransform(taxi, document);
 		luceneTemplate.update(new Term("id", taxiId), document);
 	}
 
