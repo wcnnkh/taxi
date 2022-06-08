@@ -7,9 +7,9 @@ import io.basc.framework.mapper.Copy;
 import io.basc.framework.sql.SimpleSql;
 import io.basc.framework.sql.Sql;
 import io.basc.framework.sql.orm.TableStructure;
-import io.basc.framework.sql.orm.support.StandardTableStructure;
 import io.basc.framework.util.XUtils;
 import io.basc.framework.util.page.Pagination;
+import io.github.wcnnkh.taxi.core.dto.Location;
 import io.github.wcnnkh.taxi.core.dto.Order;
 import io.github.wcnnkh.taxi.core.dto.PostOrderRequest;
 import io.github.wcnnkh.taxi.core.dto.UpdateOrderStatusRequest;
@@ -22,7 +22,8 @@ public class SimpleOrderServiceImpl implements OrderService {
 
 	public SimpleOrderServiceImpl(DB db) {
 		this.db = db;
-		TableStructure tableStructure = StandardTableStructure.resolveAll(db.getMapper(), Order.class);
+		TableStructure tableStructure = db.getMapper().getStructure(Order.class);
+		tableStructure = tableStructure.withStream(() -> db.getMapper().getStructure(Location.class).columns());
 		db.createTable(tableStructure);
 		db.getMapper().registerStructure(Order.class, tableStructure);
 	}

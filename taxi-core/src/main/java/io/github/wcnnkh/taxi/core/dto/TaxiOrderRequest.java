@@ -4,11 +4,12 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
-import io.basc.framework.mapper.MapperUtils;
 import io.basc.framework.orm.annotation.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
 @Entity
+@Data
 public class TaxiOrderRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Schema(description = "订单号")
@@ -17,25 +18,4 @@ public class TaxiOrderRequest implements Serializable {
 	@Schema(description = "车辆id")
 	@NotNull(message = "车辆id不能为空")
 	private String taxiId;
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
-	public String getTaxiId() {
-		return taxiId;
-	}
-
-	public void setTaxiId(String taxiId) {
-		this.taxiId = taxiId;
-	}
-	
-	@Override
-	public String toString() {
-		return MapperUtils.toString(this);
-	}
 }

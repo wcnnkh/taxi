@@ -2,13 +2,18 @@ package io.github.wcnnkh.taxi.core.dto;
 
 import javax.validation.constraints.NotNull;
 
-import io.basc.framework.mapper.MapperUtils;
 import io.basc.framework.orm.annotation.Entity;
 import io.basc.framework.orm.annotation.PrimaryKey;
 import io.github.wcnnkh.taxi.core.enums.OrderStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class Order extends PostOrderRequest {
 	private static final long serialVersionUID = 1L;
 	@Schema(description = "订单号", required = true)
@@ -21,41 +26,4 @@ public class Order extends PostOrderRequest {
 	private String status;
 	@Schema(description = "订单创建时间")
 	private Long createTime;
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getTaxiId() {
-		return taxiId;
-	}
-
-	public void setTaxiId(String taxiId) {
-		this.taxiId = taxiId;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public Long getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Long createTime) {
-		this.createTime = createTime;
-	}
-	
-	@Override
-	public String toString() {
-		return MapperUtils.toString(this);
-	}
 }

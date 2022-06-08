@@ -5,10 +5,11 @@ import java.io.Serializable;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import io.basc.framework.mapper.MapperUtils;
 import io.basc.framework.orm.annotation.Entity;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 
+@Data
 @Entity
 public class NearbyTaxiQuery implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -24,41 +25,4 @@ public class NearbyTaxiQuery implements Serializable {
 	@Min(1)
 	@NotNull
 	private Integer count = 50;
-
-	public Location getLocation() {
-		return location;
-	}
-
-	public void setLocation(Location location) {
-		this.location = location;
-	}
-
-	public TaxiStatus getTaxiStatus() {
-		return taxiStatus;
-	}
-
-	public void setTaxiStatus(TaxiStatus taxiStatus) {
-		this.taxiStatus = taxiStatus;
-	}
-
-	public Double getDistance() {
-		return distance;
-	}
-
-	public void setDistance(Double distance) {
-		this.distance = distance;
-	}
-	
-	public Integer getCount() {
-		return count;
-	}
-
-	public void setCount(Integer count) {
-		this.count = count;
-	}
-
-	@Override
-	public String toString() {
-		return MapperUtils.toString(this);
-	}
 }
