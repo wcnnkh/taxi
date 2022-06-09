@@ -23,8 +23,11 @@ import org.locationtech.spatial4j.shape.Point;
 import org.locationtech.spatial4j.shape.Shape;
 
 import io.basc.framework.context.annotation.Provider;
+import io.basc.framework.convert.ReverseTransformer;
+import io.basc.framework.convert.TypeDescriptor;
 import io.basc.framework.core.Ordered;
 import io.basc.framework.lucene.DefaultLuceneTemplate;
+import io.basc.framework.lucene.LuceneException;
 import io.basc.framework.lucene.LuceneTemplate;
 import io.basc.framework.lucene.ScoreDocMapper;
 import io.basc.framework.lucene.SearchParameters;
@@ -47,16 +50,24 @@ public class LuceneTaxiService implements TaxiService {
 		// SpatialPrefixTree也可以通过SpatialPrefixTreeFactory工厂类构建
 		SpatialPrefixTree grid = new GeohashPrefixTree(spatialContext, GeohashPrefixTree.getMaxLevelsPossible());
 		this.strategy = new RecursivePrefixTreeStrategy(grid, "geoField");
-	}
+		luceneTemplate.getMapper().registerStructure(Trace.class,
+				luceneTemplate.getMapper().getStructure(Trace.class).withEntitys().all());
+		luceneTemplate.getMapper().registerReverseTransformer(Trace.class,
+				new ReverseTransformer<Trace, Document, LuceneException>() {
 
-	private void writeDocument(Document document, Trace trace) {
-		luceneTemplate.getMapper().reverseTransform(trace, document);
-		Point point = spatialContext.getShapeFactory().pointXY(trace.getLocation().getLongitude(),
-				trace.getLocation().getLatitude());
-		Field[] fields = strategy.createIndexableFields(point);
-		for (Field field : fields) {
-			document.add(field);
-		}
+					@Override
+					public void reverseTransform(Trace source, TypeDescriptor sourceType, Document target,
+							TypeDescriptor targetType) throws LuceneException {
+						luceneTemplate.getMapper().reverseTransform(source,
+								luceneTemplate.getMapper().getStructure(Trace.class), target);
+						Point point = spatialContext.getShapeFactory().pointXY(source.getLocation().getLongitude(),
+								source.getLocation().getLatitude());
+						Field[] fields = strategy.createIndexableFields(point);
+						for (Field field : fields) {
+							target.add(field);
+						}
+					}
+				});
 	}
 
 	@Override
@@ -64,7 +75,7 @@ public class LuceneTaxiService implements TaxiService {
 		trace.getLocation().setTime(System.currentTimeMillis());
 		FastValidator.validate(trace);
 		Document document = new Document();
-		writeDocument(document, trace);
+		luceneTemplate.getMapper().reverseTransform(trace, document);
 		Term term = new Term("id", trace.getId());
 		luceneTemplate.saveOrUpdate(term, document);
 	}

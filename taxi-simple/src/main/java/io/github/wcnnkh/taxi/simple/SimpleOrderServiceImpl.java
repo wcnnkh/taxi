@@ -1,6 +1,7 @@
 package io.github.wcnnkh.taxi.simple;
 
 import io.basc.framework.context.annotation.Provider;
+import io.basc.framework.core.Members;
 import io.basc.framework.core.Ordered;
 import io.basc.framework.db.DB;
 import io.basc.framework.mapper.Copy;
@@ -21,8 +22,8 @@ public class SimpleOrderServiceImpl implements OrderService {
 
 	public SimpleOrderServiceImpl(DB db) {
 		this.db = db;
-		TableStructure tableStructure = db.getMapper().getStructure(Order.class)
-				.withEntitys((e) -> db.getMapper().getStructure(e.getSetter().getType())).all();
+		TableStructure tableStructure = db.getMapper().getStructure(Order.class).withMethod(Members.DIRECT)
+				.withEntitysAfter((e) -> e.setNameNestingDepth(1)).all().filter((e) -> !e.isEntity());
 		db.createTable(tableStructure);
 		db.getMapper().registerStructure(Order.class, tableStructure);
 	}

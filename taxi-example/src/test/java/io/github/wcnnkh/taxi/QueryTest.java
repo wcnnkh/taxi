@@ -25,16 +25,14 @@ public class QueryTest {
 		luceneTemplate.saveOrUpdate(new Term("name", "a"), bean1).get();
 		luceneTemplate.saveOrUpdate(new Term("name", "a"), bean2).get();
 
-		luceneTemplate
-				.search(new SearchParameters(new TermQuery(
-						new Term("name", "a")), 10), (document) -> {
-					TestBean testBean = new TestBean();
-					testBean.setName(document.get("name"));
-					testBean.setValue(document.get("value"));
-					return testBean;
+		luceneTemplate.search(new SearchParameters(new TermQuery(new Term("name", "a")), 10), (document) -> {
+			TestBean testBean = new TestBean();
+			testBean.setName(document.get("name"));
+			testBean.setValue(document.get("value"));
+			return testBean;
 
-				}).stream().forEach((b) -> {
-					System.out.println(b);
-				});
+		}).stream().forEach((b) -> {
+			System.out.println(b);
+		});
 	}
 }
