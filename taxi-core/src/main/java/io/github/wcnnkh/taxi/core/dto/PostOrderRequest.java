@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class PostOrderRequest implements Serializable {
 	private static final long serialVersionUID = 1L;
-	@Schema(description = "下单的乘客id")
+	@Schema(description = "下单的乘客id", example = "test")
 	private String passengerId;
 	@Schema(description = "上车地点")
 	@NotNull

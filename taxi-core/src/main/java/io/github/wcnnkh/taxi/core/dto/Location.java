@@ -18,10 +18,10 @@ import lombok.Data;
 @Data
 public class Location implements Serializable {
 	private static final long serialVersionUID = 1L;
-	@Schema(description = "经度", required = true)
+	@Schema(description = "经度", required = true, example = "116.411161")
 	@NotNull
 	private Double longitude;
-	@Schema(description = "纬度", required = true)
+	@Schema(description = "纬度", required = true, example = "39.899749")
 	@NotNull
 	private Double latitude;
 }
