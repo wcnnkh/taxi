@@ -23,7 +23,7 @@ public class SimpleOrderServiceImpl implements OrderService {
 	public SimpleOrderServiceImpl(DB db) {
 		this.db = db;
 		TableStructure tableStructure = db.getMapper().getStructure(Order.class).withMethod(Members.DIRECT)
-				.withEntitysAfter((e) -> e.setNameNestingDepth(1)).all().filter((e) -> !e.isEntity());
+				.withEntitysAfter((e) -> e.setNameNestingDepth(1)).all();
 		db.createTable(tableStructure);
 		db.getMapper().registerStructure(Order.class, tableStructure);
 	}
