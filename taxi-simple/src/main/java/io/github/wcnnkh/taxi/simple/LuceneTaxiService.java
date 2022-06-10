@@ -1,15 +1,12 @@
 package io.github.wcnnkh.taxi.simple;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.spatial.SpatialStrategy;
 import org.apache.lucene.spatial.prefix.RecursivePrefixTreeStrategy;
@@ -29,7 +26,6 @@ import io.basc.framework.core.Ordered;
 import io.basc.framework.lucene.DefaultLuceneTemplate;
 import io.basc.framework.lucene.LuceneException;
 import io.basc.framework.lucene.LuceneTemplate;
-import io.basc.framework.lucene.ScoreDocMapper;
 import io.basc.framework.lucene.SearchParameters;
 import io.basc.framework.lucene.SearchResults;
 import io.basc.framework.validation.FastValidator;
@@ -37,7 +33,6 @@ import io.github.wcnnkh.taxi.core.dto.NearbyTaxiQuery;
 import io.github.wcnnkh.taxi.core.dto.Taxi;
 import io.github.wcnnkh.taxi.core.dto.TaxiStatus;
 import io.github.wcnnkh.taxi.core.dto.Trace;
-import io.github.wcnnkh.taxi.core.dto.TraceLocation;
 import io.github.wcnnkh.taxi.core.service.TaxiService;
 
 @Provider(order = Ordered.LOWEST_PRECEDENCE)
@@ -52,6 +47,8 @@ public class LuceneTaxiService implements TaxiService {
 		this.strategy = new RecursivePrefixTreeStrategy(grid, "geoField");
 		luceneTemplate.getMapper().registerStructure(Trace.class,
 				luceneTemplate.getMapper().getStructure(Trace.class).withEntitys().all());
+		luceneTemplate.getMapper().registerStructure(Taxi.class,
+				luceneTemplate.getMapper().getStructure(Taxi.class).withEntitys().all());
 		luceneTemplate.getMapper().registerReverseTransformer(Trace.class,
 				new ReverseTransformer<Trace, Document, LuceneException>() {
 
@@ -88,7 +85,7 @@ public class LuceneTaxiService implements TaxiService {
 		SpatialArgs args = new SpatialArgs(SpatialOperation.Intersects, shape);
 		Query luceneQuery = strategy.makeQuery(args);
 		SearchParameters parameters = new SearchParameters(luceneQuery, query.getCount());
-		SearchResults<Taxi> results = luceneTemplate.search(parameters, mapper);
+		SearchResults<Taxi> results = luceneTemplate.search(parameters, Taxi.class);
 		return results.streamAll().filter((taxi) -> {
 			// 超过10秒未上传心跳就忽略
 			if (System.currentTimeMillis() - taxi.getLocation().getTime() > 10000L) {
@@ -98,24 +95,10 @@ public class LuceneTaxiService implements TaxiService {
 		}).limit(query.getCount()).collect(Collectors.toList());
 	}
 
-	private ScoreDocMapper<Taxi> mapper = new ScoreDocMapper<Taxi>() {
-
-		@Override
-		public Taxi map(IndexSearcher indexSearcher, ScoreDoc scoreDoc) throws IOException {
-			Document document = indexSearcher.doc(scoreDoc.doc);
-			Taxi taxi = new Taxi();
-			luceneTemplate.getMapper().transform(document, taxi);
-			taxi.setLocation(luceneTemplate.getMapper().convert(document, TraceLocation.class));
-			taxi.setTaxiStatus(luceneTemplate.getMapper().convert(document, TaxiStatus.class));
-			return taxi;
-		}
-	};
-
 	@Override
 	public Taxi getTaxi(String taxiId) {
-
 		TermQuery termQuery = new TermQuery(new Term("id", taxiId));
-		return luceneTemplate.search(new SearchParameters(termQuery, 1), mapper).first();
+		return luceneTemplate.search(new SearchParameters(termQuery, 1), Taxi.class).first();
 	}
 
 	@Override
