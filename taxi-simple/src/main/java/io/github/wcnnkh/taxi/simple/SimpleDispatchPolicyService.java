@@ -20,7 +20,7 @@ import io.github.wcnnkh.taxi.core.service.DispatchPolicyService;
  */
 @Provider(order = Ordered.LOWEST_PRECEDENCE)
 public class SimpleDispatchPolicyService implements DispatchPolicyService, EventListener<OrderStatusEvent> {
-	private File lockDirectory = new File(Sys.env.getWorkPath() + "/grab_notify_lock");
+	private File lockDirectory = new File(Sys.getEnv().getWorkPath() + "/grab_notify_lock");
 
 	public SimpleDispatchPolicyService(OrderStatusEventDispatcher orderStatusEventDispatcher) {
 		orderStatusEventDispatcher.registerListener(this);

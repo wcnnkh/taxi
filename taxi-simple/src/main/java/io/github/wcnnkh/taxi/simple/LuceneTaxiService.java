@@ -46,16 +46,16 @@ public class LuceneTaxiService implements TaxiService {
 		SpatialPrefixTree grid = new GeohashPrefixTree(spatialContext, GeohashPrefixTree.getMaxLevelsPossible());
 		this.strategy = new RecursivePrefixTreeStrategy(grid, "geoField");
 		luceneTemplate.getMapper().registerStructure(Trace.class,
-				luceneTemplate.getMapper().getStructure(Trace.class).withEntitys().all());
+				luceneTemplate.getMapper().getStructure(Trace.class).withEntitys());
 		luceneTemplate.getMapper().registerStructure(Taxi.class,
-				luceneTemplate.getMapper().getStructure(Taxi.class).withEntitys().all());
+				luceneTemplate.getMapper().getStructure(Taxi.class).withEntitys());
 		luceneTemplate.getMapper().registerReverseTransformer(Trace.class,
 				new ReverseTransformer<Trace, Document, LuceneException>() {
 
 					@Override
 					public void reverseTransform(Trace source, TypeDescriptor sourceType, Document target,
 							TypeDescriptor targetType) throws LuceneException {
-						luceneTemplate.getMapper().reverseTransform(source,
+						luceneTemplate.getMapper().transform(source,
 								luceneTemplate.getMapper().getStructure(Trace.class), target);
 						Point point = spatialContext.getShapeFactory().pointXY(source.getLocation().getLongitude(),
 								source.getLocation().getLatitude());
