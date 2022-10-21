@@ -13,7 +13,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 import io.basc.framework.event.EventListener;
-import io.basc.framework.json.JSONUtils;
+import io.basc.framework.json.JsonUtils;
 import io.basc.framework.logger.Logger;
 import io.basc.framework.logger.LoggerFactory;
 import io.basc.framework.util.StringUtils;
@@ -83,7 +83,7 @@ public class TaxiWebSocket implements EventListener<OrderStatusEvent> {
 			logger.trace("On message: {}", message);
 		}
 		
-		Trace trace = JSONUtils.getJsonSupport().parseObject(message, Trace.class);
+		Trace trace = JsonUtils.getJsonSupport().parseObject(message, Trace.class);
 		if (trace == null) {
 			return;
 		}

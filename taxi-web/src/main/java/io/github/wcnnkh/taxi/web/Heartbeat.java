@@ -2,7 +2,7 @@ package io.github.wcnnkh.taxi.web;
 
 import java.io.Serializable;
 
-import io.basc.framework.json.JSONUtils;
+import io.basc.framework.json.JsonUtils;
 
 /**
  * 心跳
@@ -34,6 +34,6 @@ public class Heartbeat<T> implements Serializable {
 
 	@Override
 	public String toString() {
-		return JSONUtils.getJsonSupport().toJSONString(this);
+		return JsonUtils.toJsonString(this);
 	}
 }
