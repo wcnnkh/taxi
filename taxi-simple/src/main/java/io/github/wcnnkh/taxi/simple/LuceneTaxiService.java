@@ -86,7 +86,7 @@ public class LuceneTaxiService implements TaxiService {
 		Query luceneQuery = strategy.makeQuery(args);
 		SearchParameters parameters = new SearchParameters(luceneQuery, query.getCount());
 		SearchResults<Taxi> results = luceneTemplate.search(parameters, Taxi.class);
-		return results.streamAll().filter((taxi) -> {
+		return results.all().stream().filter((taxi) -> {
 			// 超过10秒未上传心跳就忽略
 			if (System.currentTimeMillis() - taxi.getLocation().getTime() > 10000L) {
 				return false;

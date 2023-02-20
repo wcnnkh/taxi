@@ -12,8 +12,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 
 import io.basc.framework.context.ioc.annotation.Autowired;
-import io.basc.framework.context.result.DataResult;
-import io.basc.framework.context.result.ResultFactory;
+import io.basc.framework.context.transaction.DataResult;
+import io.basc.framework.context.transaction.ResultFactory;
 import io.basc.framework.util.page.Pagination;
 import io.basc.framework.web.message.annotation.RequestBody;
 import io.github.wcnnkh.taxi.core.dto.NearbyTaxiQuery;

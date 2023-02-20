@@ -98,13 +98,13 @@ public class SimpleOrderServiceImpl implements OrderService {
 	@Override
 	public Pagination<Order> getPassengerOrders(String passengerId, long pageNumber, long limit) {
 		Sql sql = new SimpleSql("select * from `order` where passengerId=? order by createTime desc", passengerId);
-		return db.getPage(Order.class, sql, pageNumber, limit);
+		return db.query(Order.class, sql).jumpToPage(pageNumber, limit);
 	}
 
 	@Override
 	public Pagination<Order> getTaxiOrders(String taxiId, long pageNumber, long limit) {
 		Sql sql = new SimpleSql("select * from `order` where taxiId=? order by createTime desc", taxiId);
-		return db.getPage(Order.class, sql, pageNumber, limit);
+		return db.query(Order.class, sql).jumpToPage(pageNumber, limit);
 	}
 
 	@Override
