@@ -83,7 +83,7 @@ public class TaxiWebSocket implements EventListener<OrderStatusEvent> {
 			logger.trace("On message: {}", message);
 		}
 		
-		Trace trace = JsonUtils.getJsonSupport().parseObject(message, Trace.class);
+		Trace trace = JsonUtils.getSupport().parseObject(message, Trace.class);
 		if (trace == null) {
 			return;
 		}

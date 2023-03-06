@@ -14,27 +14,11 @@ import io.github.wcnnkh.taxi.core.dto.Trace;
  *
  */
 public interface TaxiService {
-	/**
-	 * 车辆位置上报
-	 * @param trace
-	 */
 	void report(Trace trace);
 
-	/**
-	 * 获取附近车牌
-	 * 
-	 * @param taxiStatus
-	 * @return
-	 */
 	List<Taxi> getNearbyTaxis(NearbyTaxiQuery query);
- 
-	/**
-	 * 获取taxi信息
-	 * 
-	 * @param taxiId
-	 * @return
-	 */
+
 	Taxi getTaxi(String taxiId);
-	
+
 	void setStatus(String taxiId, TaxiStatus taxiStatus);
 }
