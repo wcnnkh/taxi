@@ -10,6 +10,7 @@ import io.basc.framework.context.ioc.annotation.Autowired;
 import io.basc.framework.context.transaction.DataResult;
 import io.basc.framework.context.transaction.Result;
 import io.basc.framework.context.transaction.ResultFactory;
+import io.basc.framework.mvc.annotation.Controller;
 import io.basc.framework.util.page.Pagination;
 import io.basc.framework.web.message.annotation.RequestBody;
 import io.github.wcnnkh.taxi.core.dto.Order;
@@ -21,6 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "司机(车辆)操作")
 @Path("/taxi")
+@Controller
 public class TaxiController {
 	@Autowired
 	private ResultFactory resultFactory;

@@ -1,12 +1,12 @@
 package io.github.wcnnkh.taxi.core.event;
 
-import io.basc.framework.event.EventDispatcher;
+import io.basc.framework.event.UnicastEventDispatcher;
 
 /**
  * 车辆位置变化
  * 
- * @author shuchaowen
+ * @author wcnnkh
  *
  */
-public interface TaxiTraceEventDispatcher extends EventDispatcher<TraceEvent> {
+public interface TaxiTraceEventDispatcher extends UnicastEventDispatcher<TraceEvent> {
 }

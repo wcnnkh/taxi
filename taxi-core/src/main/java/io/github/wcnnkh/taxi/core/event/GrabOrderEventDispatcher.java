@@ -1,6 +1,12 @@
 package io.github.wcnnkh.taxi.core.event;
 
-import io.basc.framework.event.EventDispatcher;
+import io.basc.framework.event.UnicastEventDispatcher;
 
-public interface GrabOrderEventDispatcher extends EventDispatcher<GrabOrderEvent> {
+/**
+ * 抢单
+ * 
+ * @author wcnnkh
+ *
+ */
+public interface GrabOrderEventDispatcher extends UnicastEventDispatcher<GrabOrderEvent> {
 }

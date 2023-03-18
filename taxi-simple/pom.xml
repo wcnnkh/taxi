@@ -21,5 +21,9 @@
 			<groupId>io.basc.framework</groupId>
 			<artifactId>db</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.basc.framework</groupId>
+			<artifactId>validation</artifactId>
+		</dependency>
 	</dependencies>
 </project>

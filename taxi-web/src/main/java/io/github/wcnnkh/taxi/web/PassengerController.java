@@ -14,6 +14,7 @@ import javax.ws.rs.QueryParam;
 import io.basc.framework.context.ioc.annotation.Autowired;
 import io.basc.framework.context.transaction.DataResult;
 import io.basc.framework.context.transaction.ResultFactory;
+import io.basc.framework.mvc.annotation.Controller;
 import io.basc.framework.util.page.Pagination;
 import io.basc.framework.web.message.annotation.RequestBody;
 import io.github.wcnnkh.taxi.core.dto.NearbyTaxiQuery;
@@ -29,6 +30,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "乘客操作")
 @Path("/passenger")
+@Controller
 public class PassengerController {
 	@Autowired
 	private ResultFactory resultFactory;
