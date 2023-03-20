@@ -1,5 +1,6 @@
 package io.github.wcnnkh.taxi;
 
+import io.basc.framework.boot.annotation.BootApplication;
 import io.basc.framework.boot.support.MainApplication;
 import io.basc.framework.context.annotation.Bean;
 import io.basc.framework.db.DB;
@@ -7,6 +8,7 @@ import io.basc.framework.env.Sys;
 import io.basc.framework.sqlite.SQLiteDB;
 import io.basc.framework.web.resource.StaticResourceRegistry;
 
+@BootApplication
 public class TaxiExampleApplication {
 	public static void main(String[] args) {
 		MainApplication.run(TaxiExampleApplication.class, args);
