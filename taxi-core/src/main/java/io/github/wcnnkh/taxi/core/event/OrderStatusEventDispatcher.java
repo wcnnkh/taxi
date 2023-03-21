@@ -1,6 +1,6 @@
 package io.github.wcnnkh.taxi.core.event;
 
-import io.basc.framework.event.UnicastEventDispatcher;
+import io.basc.framework.event.BroadcastEventDispatcher;
 
 /**
  * 订单事件分发
@@ -8,5 +8,5 @@ import io.basc.framework.event.UnicastEventDispatcher;
  * @author wcnnkh
  *
  */
-public interface OrderStatusEventDispatcher extends UnicastEventDispatcher<OrderStatusEvent> {
+public interface OrderStatusEventDispatcher extends BroadcastEventDispatcher<OrderStatusEvent> {
 }
